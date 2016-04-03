@@ -1,4 +1,4 @@
-package com.grapheye
+package com.grapheye.core
 
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkConf
