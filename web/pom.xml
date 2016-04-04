@@ -30,6 +30,11 @@
       <artifactId>spring-webmvc</artifactId>
       <version>${spring.version}</version>
     </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
@@ -41,7 +46,7 @@
 
   <build>
     <!-- name of final war file -->
-    <finalName>grapheyeServer</finalName>
+    <finalName>grapheye</finalName>
     <plugins>
       <!-- compiler settings -->
       <plugin>
@@ -61,6 +66,7 @@
         <version>2.2</version>
         <configuration>
           <path>/${project.artifactId}</path>
+          <forkMode>never</forkMode>
         </configuration>
       </plugin>
     </plugins>
