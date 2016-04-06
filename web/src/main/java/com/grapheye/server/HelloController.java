@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ui.Model;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/")
 public class HelloController
 {
     private static final Logger logger =
