@@ -1,5 +1,7 @@
 package com.grapheye.server;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import org.json.simple.JSONArray;
@@ -60,6 +62,9 @@ public class APIController
             logger.info("/launch: bad request format " + requestBody);
             return "{\"error\":\"bad request\"}";
         }
+
+        List<String> args = request.getArgs();
+        CoreExecutor.execute(grapheyeCorePath, args);
 
         return "{\"error\":null}";
     }

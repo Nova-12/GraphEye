@@ -1,5 +1,8 @@
 package com.grapheye.server;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import org.json.simple.JSONArray;
@@ -9,14 +12,11 @@ import org.json.simple.parser.ParseException;
 
 public class LaunchRequest
 {
+    private String inputType = null;
     private String inputEdgeFile = null;
     private String inputNodeFile = null;
     private String algorithm = null;
     private String outputTable = null;
-
-    public LaunchRequest()
-    {
-    }
 
     public void parse(JSONObject jsonObject) throws JsonTypeException
     {
@@ -32,7 +32,7 @@ public class LaunchRequest
 
     private void parseInput(SafeJson input) throws JsonTypeException
     {
-        String inputType = input.getString("type");
+        this.inputType = input.getString("type");
         if (inputType.equals("text"))
         {
             this.inputEdgeFile = input.getString("edge");
@@ -40,6 +40,14 @@ public class LaunchRequest
         }
         else
             throw new JsonTypeException("invalid input.type: " + inputType);
+    }
+
+    public List<String> getArgs()
+    {
+        ArrayList<String> args = new ArrayList<String>();
+        args.add(inputEdgeFile);
+        args.add(inputNodeFile);
+        return args;
     }
 }
 
