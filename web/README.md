@@ -27,14 +27,13 @@ Response format
 
 ```
 {
-  "error": null,
-  "jobId": 1
+  "error": null
 }
 ```
 
 ### Status query
 
-URL: `GET /api/status/{job_id}`
+URL: `GET /api/status`
 
 Response format
 
@@ -54,7 +53,7 @@ status:
 
 ### Result query
 
-URL: `GET /api/result/{job_id}`
+URL: `GET /api/result`
 
 Response format (pagerank)
 
