@@ -29,14 +29,12 @@ public class APIController
     @Value("${grapheye.core.path}")
     private String grapheyeCorePath;
 
-    @RequestMapping(value="/user/{userid}", method=RequestMethod.GET)
-    public ModelAndView user(@PathVariable(value="userid") String id)
+    @RequestMapping(value="/debug", method=RequestMethod.GET)
+    public ModelAndView user()
     {
-        logger.info("In user()");
-
         ModelAndView model = new ModelAndView();
-        model.setViewName("user");
-        model.addObject("greeting", grapheyeCorePath);
+        model.setViewName("debug");
+        model.addObject("grapheyeCorePath", grapheyeCorePath);
         return model;
     }
 
