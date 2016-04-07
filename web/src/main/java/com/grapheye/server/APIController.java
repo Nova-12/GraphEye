@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,10 @@ public class APIController
     private static final Logger logger =
         Logger.getLogger(APIController.class);
 
+    // Reads from grapheye.properties
+    @Value("${grapheye.core.path}")
+    private String grapheyeCorePath;
+
     @RequestMapping(value="/user/{userid}", method=RequestMethod.GET)
     public ModelAndView user(@PathVariable(value="userid") String id)
     {
@@ -29,7 +34,7 @@ public class APIController
 
         ModelAndView model = new ModelAndView();
         model.setViewName("user");
-        model.addObject("greeting", "Hello user " + id);
+        model.addObject("greeting", grapheyeCorePath);
         return model;
     }
 
