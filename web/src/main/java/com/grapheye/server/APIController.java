@@ -68,5 +68,13 @@ public class APIController
 
         return "{\"error\":null}";
     }
+
+    @RequestMapping(value="/result", method=RequestMethod.GET)
+    @ResponseBody
+    public String result()
+    {
+        JSONObject result = ResultFetcher.getResult("pagerank", "pagerank");
+        return result.toJSONString();
+    }
 }
 
