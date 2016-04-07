@@ -2,11 +2,39 @@
 
 Web interface to grapheye-core.
 
+## Requirements
+
+1. Maven
+2. Tomcat
+3. JDK
+
+## Set grapheye-core settings
+
+```
+cd src/main/webapp/WEB-INF
+cp grapheye.properties.template grapheye.properties
+```
+
+Then edit `grapheye.properties`:
+
+- `grapheye.core.path`: Absolute path of `run.sh` in grapheye-core.
+
+## Compile and run
+
+The program must be recompiled whenever there is change in `grapheye.properties`.
+
+```
+make
+make run
+```
+
+Then connect to `http://localhost:8080/grapheye/`
+
 ## API design
 
 ### Job Launch
 
-URL: `POST /api/launch`
+URL: `POST /grapheye/api/launch`
 
 Request format
 
@@ -33,7 +61,7 @@ Response format
 
 ### Status query
 
-URL: `GET /api/status`
+URL: `GET /grapheye/api/status`
 
 Response format
 
@@ -53,7 +81,7 @@ status:
 
 ### Result query
 
-URL: `GET /api/result`
+URL: `GET /grapheye/api/result`
 
 Response format (pagerank)
 
