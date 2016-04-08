@@ -14,7 +14,7 @@ This project is made of two subprojects: `core` and `web`.
 
 ```
 make
-./run.sh <arguments>
+./run.sh <Export_Dest, EdgeListFile, NodeListFile>
 ```
 
 ### Spark monitor

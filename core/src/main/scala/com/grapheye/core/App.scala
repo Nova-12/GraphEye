@@ -15,22 +15,22 @@ import org.bson.Document;
 object App {
   def main(args: Array[String]) {
 
-    if (args.length == 0) {
+    if (args.length < 2) {
       System.out.println("Boom!");
       System.exit(1);
     }
     var client = new MongoClient("localhost:27017");
     var db = client.getDatabase("test");
-    var collection = db.getCollection("pagerank");
+    var collection = db.getCollection(args(0));
 
-    val edgeListFilePath = args(0);
+    val edgeListFilePath = args(1);
     var nodeListFilePath:String = null;
     var nodeList: RDD[String] = null;
     var vertexRDD: RDD[(VertexId, String)] = null;
     var results: Graph[(String, Double), Double] = null;
 
-    if (args.length > 1){
-      nodeListFilePath = args(1);
+    if (args.length > 2){
+      nodeListFilePath = args(2);
     }
     System.out.println("Hello!");
 
