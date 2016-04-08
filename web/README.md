@@ -56,12 +56,13 @@ Response format
 ```
 {
   "error": null
+  "jobid": 5
 }
 ```
 
 ### Status query
 
-URL: `GET /grapheye/api/status`
+URL: `GET /grapheye/api/status/<jobid>`
 
 Response format
 
@@ -74,14 +75,13 @@ Response format
 
 status:
 
-- starting: started a process, but not yet connected to spark monitor.
-- running: connected to spark monitor (`localhost:4040`).
-- terminated: the process is terminated.
-- failed: the process returned nonzero exit code.
+- running: A job is running
+- success: successfully finished with exit code 0
+- fail: failed with nonzero exit code
 
 ### Result query
 
-URL: `GET /grapheye/api/result`
+URL: `GET /grapheye/api/result/<jobid>`
 
 Response format (pagerank)
 

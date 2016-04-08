@@ -62,27 +62,55 @@ public class APIController
         }
 
         List<String> args = request.getArgs();
-        CoreExecutor.execute(grapheyeCorePath, args);
 
-        return "{\"error\":null}";
-    }
+        CoreProcess process = new CoreProcess();
+        boolean executed = process.execute(grapheyeCorePath, args);
+        if (!executed)
+            return "{\"error\":\"Cannot execute job\"}";
 
-    @RequestMapping(value="/status", method=RequestMethod.GET)
-    @ResponseBody
-    public String handleStatus()
-    {
-        String message = CoreExecutor.getStatus().toString();
+        int jobId = JobManager.addJob(request, process);
+
         JSONObject result = new JSONObject();
         result.put("error", null);
-        result.put("status", message);
+        result.put("jobid", jobId);
+
         return result.toJSONString();
     }
 
-    @RequestMapping(value="/result", method=RequestMethod.GET)
+    @RequestMapping(value="/status/{jobId}", method=RequestMethod.GET)
     @ResponseBody
-    public String handleResult()
+    public String handleStatus(@PathVariable("jobId") int jobId)
     {
-        JSONObject result = ResultFetcher.getResult("pagerank", "pagerank");
+        String status = JobManager.getStatus(jobId);
+        JSONObject result = new JSONObject();
+        if (status == null)
+        {
+            result.put("error", "No such job");
+            result.put("status", null);
+        }
+        else
+        {
+            result.put("error", null);
+            result.put("status", status);
+        }
+        return result.toJSONString();
+    }
+
+    @RequestMapping(value="/result/{jobId}", method=RequestMethod.GET)
+    @ResponseBody
+    public String handleResult(@PathVariable("jobId") int jobId)
+    {
+        String status = JobManager.getStatus(jobId);
+        if (status == null)
+        {
+            return "{\"error\":\"No such job\"}";
+        }
+        if (status != "success")
+        {
+            return "{\"error\":\"Result not produced\"}";
+        }
+
+        JSONObject result = JobManager.getResult(jobId);
         return result.toJSONString();
     }
 }

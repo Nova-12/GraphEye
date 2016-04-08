@@ -50,5 +50,8 @@ public class LaunchRequest
         args.add(inputNodeFile);
         return args;
     }
+
+    public String getAlgorithm() { return algorithm; }
+    public String getOutputTable() { return outputTable; }
 }
 
