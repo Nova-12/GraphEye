@@ -30,7 +30,7 @@ public class APIController
     private String grapheyeCorePath;
 
     @RequestMapping(value="/debug", method=RequestMethod.GET)
-    public ModelAndView user()
+    public ModelAndView handleDebug()
     {
         ModelAndView model = new ModelAndView();
         model.setViewName("debug");
@@ -40,7 +40,7 @@ public class APIController
 
     @RequestMapping(value="/launch", method=RequestMethod.POST)
     @ResponseBody
-    public String launch(@RequestBody String requestBody)
+    public String handleLaunch(@RequestBody String requestBody)
     {
         JSONParser parser = new JSONParser();
         JSONObject json = null;
@@ -67,9 +67,20 @@ public class APIController
         return "{\"error\":null}";
     }
 
+    @RequestMapping(value="/status", method=RequestMethod.GET)
+    @ResponseBody
+    public String handleStatus()
+    {
+        String message = CoreExecutor.getStatus().toString();
+        JSONObject result = new JSONObject();
+        result.put("error", null);
+        result.put("status", message);
+        return result.toJSONString();
+    }
+
     @RequestMapping(value="/result", method=RequestMethod.GET)
     @ResponseBody
-    public String result()
+    public String handleResult()
     {
         JSONObject result = ResultFetcher.getResult("pagerank", "pagerank");
         return result.toJSONString();
