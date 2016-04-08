@@ -21,7 +21,16 @@ public class ResultFetcher
         @Override
         public void apply(final Document document)
         {
-            String node = document.getString("node");
+            // "node" can be either Long(nodeId) or String(nodeName).
+            String node = null;
+            try {
+                node = document.getString("node");
+            }
+            catch (ClassCastException e) {
+                Long nodeId = document.getLong("node");
+                node = String.valueOf(nodeId);
+            }
+
             Double rank = document.getDouble("rank");
 
             JSONObject item = new JSONObject();
