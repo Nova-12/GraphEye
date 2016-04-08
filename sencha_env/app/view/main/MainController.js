@@ -32,6 +32,22 @@ Ext.define('grapheye.view.main.MainController', {
         });
     },
 
+    onRunClick: function () {
+        Ext.Ajax.request({
+
+            url:"api/result",
+            method:"GET",
+
+            success:function(result, request){
+                var jsonResult = Ext.util.JSON.decode(result.responseText);
+                Ext.Msg.alert("Success", "Data return from mongodb" + jsonResult.name);
+            },
+            failure:function(result, request){
+                Ext.Msg.alert("Failed");
+            }
+        });
+    },
+
     onLoginClick: function() {
 
         // This would be the ideal location to verify the user's credentials via

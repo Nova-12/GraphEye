@@ -10,7 +10,6 @@ Ext.define('grapheye.view.login.Login', {
     controller: 'login',
     bodyPadding: 10,
     title: 'Login Window',
-    closable: false,
     autoShow: true,
 
     items: {

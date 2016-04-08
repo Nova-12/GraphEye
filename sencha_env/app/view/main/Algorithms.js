@@ -15,22 +15,22 @@ Ext.define('grapheye.view.main.Algorithms', {
         items: [{
             xtype: 'button',
             text: 'PageRank',
-            margin: '10 0',
+            margin: '10 0'
             //handler: 'onClickButton'
         }, {
             xtype: 'button',
             text: 'Connected Components',
-            margin: '10 0',
+            margin: '10 0'
             //handler: 'onClickButton
         }, {
             xtype: 'button',
             text: 'Triangle Count',
-            margin: '10 0',
+            margin: '10 0'
             //handler: 'onClickButton
         }, {
             xtype: 'button',
             text: 'Label Propagation',
-            margin: '10 0',
+            margin: '10 0'
             //handler: 'onClickButton
         }]
     }

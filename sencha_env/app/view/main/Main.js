@@ -106,8 +106,13 @@ Ext.define('grapheye.view.main.Main', {
     }, {
         title: 'Visualize',
         iconCls: 'fa-cog',
-        bind: {
-            html: '{loremIpsum}'
-        }
+        items: [{
+            xtype: 'button',
+            text: 'Run',
+            margin: '10 0',
+            handler: 'onRunClick'
+        }, {
+            xtype: 'mainexport'
+        }]
     }]
 });

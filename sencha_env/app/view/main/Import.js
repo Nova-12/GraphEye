@@ -7,7 +7,6 @@ Ext.define('grapheye.view.main.Import', {
     ],
 
     controller: 'main',
-    //bodyPadding: 10,
     title: 'Import',
     closable: false,
     autoShow: true,
@@ -20,9 +19,6 @@ Ext.define('grapheye.view.main.Import', {
     }],
     buttons: [{
         text: 'Confirm',
-        formBind: true,
-        listeners: {
-            click: 'onLoginClick'
-        }
+        formBind: true
     }]
 });
