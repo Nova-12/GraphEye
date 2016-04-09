@@ -106,22 +106,16 @@ Ext.define('grapheye.view.main.Main', {
             margin: '10 0',
             handler: 'onRunClick'
         }, {
+    	    region: 'center',
+    	    xtype: 'tabpanel',
+    	    reference: 'visualPanel',
+    	    items:[
+    	    ]
+        }, {
             xtype: 'button',
             text: 'Visualize',
             margin: '10 0',
             handler: 'onVisualizeClick'
-        }, {
-    	    region: 'center',
-    	    xtype: 'tabpanel',
-    	    items:[{
-    	        xtype: 'D3HorizontalBarChart',
-    		    title: 'Horizontal Bar Chart',
-    		    width: 600,
-    		    height: 400,
-    		    dataUrl: 'resources/testdata/donutdata.json',
-    		    chartTitle: 'PageRank',
-    		    showTotal: true
-		  }]
         }]
     }]
 });

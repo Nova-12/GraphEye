@@ -60,17 +60,19 @@ Ext.define('tempapp.view.main.D3HorizontalBarChart', {
     drawChart: function(me, width, height){
 
         if(me.dataUrl){
-            if(me.localData === ''){
+            if(true){
                 /*
                  Done to ensure that the standard JSON that
                  is used with extjs does not trip up teh json decode that
                  D3.js does.
                  */
+		var sample_data = [];
                 d3.text(me.dataUrl,'text/plain', function(error) {
                     if (error) return console.warn(error);
                 }).on("load", function(data) {
                         var decodedData = Ext.JSON.decode(data);
-
+			console.log("decodedData = ")
+			console.log(decodedData)
                         var singleKeyFormat = [{"key":me.seriesTitle,"color": me.barColor, "values":[]}];
                         //console.log(singleKeyFormat);
 
@@ -118,11 +120,16 @@ Ext.define('tempapp.view.main.D3HorizontalBarChart', {
 
             var chart = nv.models.multiBarHorizontalChart()
                 .x(function(d) {
-                    return d.label
+		    //for (var prop in d):
+			//console.log("o." + prop + " = " + obj[prop]);
+		    console.log(d);
+		    console.log("d.label = " + d.label);
+                    return d.node;
 
                 })
                 .y(function(d) {
-                        return d.value;
+		    console.log("d.rank = " + d.rank);
+                    return d.rank;
                 })
                 .margin({top: 30, right: 20, bottom: 50, left: 175})
                 .showValues(true)           //Show bar value next to each bar.
