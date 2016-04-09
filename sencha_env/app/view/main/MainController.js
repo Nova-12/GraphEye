@@ -31,22 +31,6 @@ Ext.define('grapheye.view.main.MainController', {
         });
     },
 
-    onStatusClick: function () {
-        Ext.Ajax.request({
-
-            url:"api/status/",
-            method:"GET",
-
-            success:function(result, request){
-                var jsonResult = Ext.util.JSON.decode(result.responseText);
-                Ext.Msg.alert("Success", "Current status is: " + jsonResult.status);
-            },
-            failure:function(result, request){
-                Ext.Msg.alert("Failed");
-            }
-        });
-    },
-
     onVisualizeClick: function () {
         Ext.Ajax.request({
 

@@ -21,8 +21,8 @@ Ext.define('grapheye.view.main.Export', {
         text: 'Confirm',
         formBind: true,
         handler: function(){
-            var value = Ext.getCmp('exportdestination').getValue();
-            console.log(value) // well received
+            grapheye.store.Request.exportdestination = Ext.getCmp('exportdestination').getValue();
+            console.log(grapheye.store.Request);
         }
     }]
 });

@@ -26,10 +26,9 @@ Ext.define('grapheye.view.main.Import', {
         text: 'Confirm',
         formBind: true,
         handler: function(){
-        var edgefilepath = Ext.getCmp('edgefilepath').getValue();
-        var nodefilepath = Ext.getCmp('nodefilepath').getValue();
-        console.log(edgefilepath) // well received
-        console.log(nodefilepath) // well received
+            grapheye.store.Request.importEdgeFile = Ext.getCmp('edgefilepath').getValue();
+            grapheye.store.Request.importNodeFile = Ext.getCmp('nodefilepath').getValue();
+            console.log(grapheye.store.Request);
         }
     }]
 });

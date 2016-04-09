@@ -107,11 +107,6 @@ Ext.define('grapheye.view.main.Main', {
             handler: 'onRunClick'
         }, {
             xtype: 'button',
-            text: 'Status',
-            margin: '10 0',
-            handler: 'onStatusClick'
-        }, {
-            xtype: 'button',
             text: 'Visualize',
             margin: '10 0',
             handler: 'onVisualizeClick'
