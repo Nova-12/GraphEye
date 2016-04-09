@@ -1,23 +1,28 @@
 Ext.define('grapheye.view.main.Export', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Ext.panel.Panel',
     xtype: 'mainexport',
 
     requires: [
-        'grapheye.store.Result'
+        'grapheye.view.main.MainController'
     ],
 
+    controller: 'main',
     title: 'Export',
+    closable: false,
+    autoShow: true,
 
-    store: {
-        type: 'result'
-    },
-
-    columns: [
-        { text: 'Node', dataIndex: 'node' },
-        { text: 'Rank', dataIndex: 'rank', flex: 1 }
-    ],
-
-    listeners: {
-        select: 'onItemSelected'
-    }
+    items: [{
+        xtype: 'textfield',
+        id: 'exportdestination',
+        fieldLabel: 'Enter export destination',
+        allowBlank: false
+    }],
+    buttons: [{
+        text: 'Confirm',
+        formBind: true,
+        handler: function(){
+            var value = Ext.getCmp('exportdestination').getValue();
+            console.log(value) // well received
+        }
+    }]
 });

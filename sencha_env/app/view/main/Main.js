@@ -40,13 +40,7 @@ Ext.define('grapheye.view.main.Main', {
             },
             flex: 0
         },
-        iconCls: 'fa-th-list',
-        items: [{
-            xtype: 'button',
-            text: 'Logout',
-            margin: '10 0',
-            handler: 'onClickButton'
-        }]
+        iconCls: 'fa-th-list'
     },
 
     tabBar: {
@@ -112,19 +106,27 @@ Ext.define('grapheye.view.main.Main', {
             margin: '10 0',
             handler: 'onRunClick'
         }, {
-	    region: 'center',
-	    xtype: 'tabpanel',
-	    items:[
-		{
-	            xtype: 'D3HorizontalBarChart',
-		    title: 'Horizontal Bar Chart',
-		    width: 600,
-		    height: 400,
-		    dataUrl: 'resources/testdata/donutdata.json',
-		    chartTitle: 'PageRank',
-		    showTotal: true
-		}
-	    ]
+            xtype: 'button',
+            text: 'Status',
+            margin: '10 0',
+            handler: 'onStatusClick'
+        }, {
+            xtype: 'button',
+            text: 'Visualize',
+            margin: '10 0',
+            handler: 'onVisualizeClick'
+        }, {
+    	    region: 'center',
+    	    xtype: 'tabpanel',
+    	    items:[{
+    	        xtype: 'D3HorizontalBarChart',
+    		    title: 'Horizontal Bar Chart',
+    		    width: 600,
+    		    height: 400,
+    		    dataUrl: 'resources/testdata/donutdata.json',
+    		    chartTitle: 'PageRank',
+    		    showTotal: true
+		  }]
         }]
     }]
 });
