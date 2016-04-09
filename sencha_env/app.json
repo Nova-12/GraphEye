@@ -221,7 +221,15 @@
         {
             "path": "app.js",
             "bundle": true
-        }
+        },
+	{
+	    "path": "resources/js/d3.min.js",
+	    "bundle": false
+	},
+	{
+	    "path": "resources/js/nv.d3.min.js",
+	    "bundle": false
+	}
     ],
 
     
@@ -259,7 +267,15 @@
             "path": "${build.out.css.path}",
             "bundle": true,
             "exclude": ["fashion"]
-        }
+        },
+	{
+	    "path": "bootstrap.css",
+	    "bootstrap": true
+	},
+	{
+	    "path": "resources/css/nv.d3.css",
+	    "bootstrap": false
+	}
     ],
 
     /**
@@ -516,5 +532,5 @@
      * Uniquely generated id for this application, used as prefix for localStorage keys.
      * Normally you should never change this value.
      */
-    "id": "fc45e051-00ea-457e-a104-7979b233a289"
+    "id": "41d468c4-66c8-4ad2-90b6-7130581beab3"
 }
