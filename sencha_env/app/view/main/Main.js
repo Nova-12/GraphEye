@@ -114,16 +114,8 @@ Ext.define('grapheye.view.main.Main', {
         }, {
 	    region: 'center',
 	    xtype: 'tabpanel',
+	    reference: 'visualPanel',
 	    items:[
-		{
-	            xtype: 'D3HorizontalBarChart',
-		    title: 'Horizontal Bar Chart',
-		    width: 600,
-		    height: 400,
-		    dataUrl: 'resources/testdata/donutdata.json',
-		    chartTitle: 'PageRank',
-		    showTotal: true
-		}
 	    ]
         }]
     }]
