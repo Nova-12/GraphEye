@@ -17,7 +17,7 @@ Ext.define('grapheye.view.main.Algorithms', {
             text: 'PageRank',
             margin: '10 0',
             handler: function(){
-                grapheye.store.Request.algorithm = "pagerank";
+                grapheye.store.Request.algorithmName = "pagerank";
             }
         }, {
             xtype: 'button',
