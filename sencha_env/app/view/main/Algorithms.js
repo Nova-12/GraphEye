@@ -15,8 +15,11 @@ Ext.define('grapheye.view.main.Algorithms', {
         items: [{
             xtype: 'button',
             text: 'PageRank',
-            margin: '10 0'
-            //handler: 'onClickButton'
+            margin: '10 0',
+            handler: function(){
+                var Algorithm = "pagerank";
+                console.log(Algorithm) // well received
+            }
         }, {
             xtype: 'button',
             text: 'Connected Components',

@@ -13,30 +13,28 @@ Ext.define('grapheye.view.main.MainController', {
         Ext.Msg.confirm('Confirm', 'Are you sure?', 'onConfirm', this);
     },
 
-    onConfirm: function (choice) {
-        if (choice === 'yes') {
-            //
-        }
-    },
+    onRunClick: function () {
+        Ext.Ajax.request({
 
-    onClickButton: function () {
-        // Remove the localStorage key/value
-        localStorage.removeItem('TutorialLoggedIn');
+            url:"api/launch",
+            method:"POST",
 
-        // Remove Main View
-        this.getView().destroy();
+            // load post json from store.
 
-        // Add the Login Window
-        Ext.create({
-            xtype: 'login'
+            success:function(result, request){
+                var jsonResult = Ext.util.JSON.decode(result.responseText);
+                Ext.Msg.alert("Success", "Algorithm is running: " + jsonResult.algorithm);
+            },
+            failure:function(result, request){
+                Ext.Msg.alert("Failed");
+            }
         });
     },
 
     onRunClick: function () {
 	var jsonResult;
         Ext.Ajax.request({
-
-            url:"api/result",
+            url:"api/status/",
             method:"GET",
 
             success:function(result, request){
@@ -59,21 +57,19 @@ Ext.define('grapheye.view.main.MainController', {
 	}));
     },
 
-    onLoginClick: function() {
+    onVisualizeClick: function () {
+        Ext.Ajax.request({
 
-        // This would be the ideal location to verify the user's credentials via
-        // a server-side lookup. We'll just move forward for the sake of this example.
+            url:"api/result/",
+            method:"GET",
 
-        // Set the localStorage value to true
-        localStorage.setItem("TutorialLoggedIn", true);
-
-        // Remove Login Window
-        this.getView().destroy();
-
-        // Add the main view to the viewport
-        Ext.create({
-            xtype: 'app-main'
+            success:function(result, request){
+                var jsonResult = Ext.util.JSON.decode(result.responseText);
+                Ext.Msg.alert("Success", "Data return from mongodb: " + jsonResult.algorithm);
+            },
+            failure:function(result, request){
+                Ext.Msg.alert("Failed");
+            }
         });
-
     }
 });

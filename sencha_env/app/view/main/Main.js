@@ -40,13 +40,7 @@ Ext.define('grapheye.view.main.Main', {
             },
             flex: 0
         },
-        iconCls: 'fa-th-list',
-        items: [{
-            xtype: 'button',
-            text: 'Logout',
-            margin: '10 0',
-            handler: 'onClickButton'
-        }]
+        iconCls: 'fa-th-list'
     },
 
     tabBar: {
@@ -117,6 +111,11 @@ Ext.define('grapheye.view.main.Main', {
 	    reference: 'visualPanel',
 	    items:[
 	    ]
+        }, {
+            xtype: 'button',
+            text: 'Visualize',
+            margin: '10 0',
+            handler: 'onVisualizeClick'
         }]
     }]
 });

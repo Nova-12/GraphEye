@@ -1,5 +1,5 @@
 Ext.define('grapheye.view.main.Import', {
-    extend: 'Ext.tab.Panel',
+    extend: 'Ext.panel.Panel',
     xtype: 'mainimport',
 
     requires: [
@@ -13,12 +13,23 @@ Ext.define('grapheye.view.main.Import', {
 
     items: [{
         xtype: 'textfield',
-        name: 'filepath',
-        fieldLabel: 'Enter file path',
+        id: 'edgefilepath',
+        fieldLabel: 'Enter edge file path',
         allowBlank: false
+    }, {
+        xtype: 'textfield',
+        id: 'nodefilepath',
+        fieldLabel: 'Enter node file path',
+        allowBlank: true
     }],
     buttons: [{
         text: 'Confirm',
-        formBind: true
+        formBind: true,
+        handler: function(){
+        var edgefilepath = Ext.getCmp('edgefilepath').getValue();
+        var nodefilepath = Ext.getCmp('nodefilepath').getValue();
+        console.log(edgefilepath) // well received
+        console.log(nodefilepath) // well received
+        }
     }]
 });
