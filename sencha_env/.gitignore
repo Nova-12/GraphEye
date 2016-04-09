@@ -5,3 +5,5 @@ ext
 build
 build.xml
 .idea
+bootstrap.json
+saas/example/bootstrap.json
