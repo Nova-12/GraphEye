@@ -5,4 +5,5 @@ Ext.define('grapheye.store.Request', {
 	importNodeFile: null,
 	algorithmName: null,
 	exportDestination: null
+
 })

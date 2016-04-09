@@ -111,11 +111,6 @@ Ext.define('grapheye.view.main.Main', {
     	    reference: 'visualPanel',
     	    items:[
     	    ]
-        }, {
-            xtype: 'button',
-            text: 'Visualize',
-            margin: '10 0',
-            handler: 'onVisualizeClick'
         }]
     }]
 });
