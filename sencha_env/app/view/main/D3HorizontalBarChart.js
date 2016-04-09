@@ -26,6 +26,8 @@ Ext.define('tempapp.view.main.D3HorizontalBarChart', {
     valueFormat     : 'float',                    // takes int, currency, float (two decimal places)
     barColor        : '#4f99b4',
 
+    resultData	    : '',
+
     initComponent : function(){
 
         this.on({
@@ -59,14 +61,24 @@ Ext.define('tempapp.view.main.D3HorizontalBarChart', {
 
     drawChart: function(me, width, height){
 
-        if(me.dataUrl){
-            if(true){
+        if(me.resultData){
+            if(me.localData == ''){
                 /*
                  Done to ensure that the standard JSON that
                  is used with extjs does not trip up teh json decode that
                  D3.js does.
                  */
-		var sample_data = [];
+		console.log("result Data = ");
+		console.log(me.resultData);
+		var singleKeyFormat = [{"key":me.seriesTitle, "color": me.barColor, "values":[]}];
+		Ext.Array.each(me.resultData.data, function(item){
+		    singleKeyFormat[0].values.push(item);
+		});
+		console.log("singleKeyFormat = ");
+		console.log(singleKeyFormat);
+		me.localData = singleKeyFormat;
+		setupChart(me.localData);
+		/*
                 d3.text(me.dataUrl,'text/plain', function(error) {
                     if (error) return console.warn(error);
                 }).on("load", function(data) {
@@ -74,16 +86,16 @@ Ext.define('tempapp.view.main.D3HorizontalBarChart', {
 			console.log("decodedData = ")
 			console.log(decodedData)
                         var singleKeyFormat = [{"key":me.seriesTitle,"color": me.barColor, "values":[]}];
-                        //console.log(singleKeyFormat);
+                        console.log(singleKeyFormat);
 
                         Ext.Array.each(decodedData.data, function(item){
                             singleKeyFormat[0].values.push(item);
                         });
-                        //console.log(singleKeyFormat);
+                        console.log(singleKeyFormat);
                         me.localData = singleKeyFormat;
                         //console.log(me.localData);
                         setupChart(me.localData);
-                    });
+                    });*/
             } else {
                 setupChart(me.localData);
             }
@@ -120,15 +132,9 @@ Ext.define('tempapp.view.main.D3HorizontalBarChart', {
 
             var chart = nv.models.multiBarHorizontalChart()
                 .x(function(d) {
-		    //for (var prop in d):
-			//console.log("o." + prop + " = " + obj[prop]);
-		    console.log(d);
-		    console.log("d.label = " + d.label);
                     return d.node;
-
                 })
                 .y(function(d) {
-		    console.log("d.rank = " + d.rank);
                     return d.rank;
                 })
                 .margin({top: 30, right: 20, bottom: 50, left: 175})
