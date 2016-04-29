@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class CoreProcess
 {
@@ -38,6 +40,25 @@ public class CoreProcess
         return execute(cmd);
     }
 
+    private void flushStdio()
+    {
+        try {
+            String line = null;
+            BufferedReader stdout = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()));
+            BufferedReader stderr = new BufferedReader(
+                    new InputStreamReader(process.getErrorStream()));
+            while ((line = stdout.readLine()) != null) {
+                logger.debug(line);
+            }
+            while ((line = stderr.readLine()) != null) {
+                logger.error(line);
+            }
+        }
+        catch (IOException e) {
+        }
+    }
+
     public boolean isRunning()
     {
         try {
@@ -46,6 +67,7 @@ public class CoreProcess
         catch (IllegalThreadStateException e) {
             return true;
         }
+        // flushStdio();
         return false;
     }
 

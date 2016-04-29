@@ -14,7 +14,8 @@ This project is made of two subprojects: `core` and `web`.
 
 ```
 make
-./run.sh <Export_Dest, EdgeListFile, NodeListFile>
+./run.sh algorithm output inputs
+# ./run.sh pagerank pr_test test.edgelist test.nodelist
 ```
 
 ### Spark monitor

@@ -45,6 +45,7 @@ public class LaunchRequest
     public List<String> getArgs()
     {
         ArrayList<String> args = new ArrayList<String>();
+        args.add(algorithm);
         args.add(outputTable);
         args.add(inputEdgeFile);
         args.add(inputNodeFile);

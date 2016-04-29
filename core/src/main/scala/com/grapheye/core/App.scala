@@ -11,12 +11,24 @@ import org.rogach.scallop.ScallopConf
 import org.rogach.scallop.exceptions.RequiredOptionNotFound
 
 class Conf(args: Seq[String]) extends ScallopConf(args) {
-  banner("Usage: ./run.sh output-dest input-type input-source\n\nOptions:")
+
+  val algorithm = trailArg[String](default=Some("pagerank"),
+                                   descr="Algorithm to execute", required=false)
   val output = trailArg[String]()
   val edgeFile = trailArg[String]()
   val nodeFile = trailArg[String](required=false)
+
+  validate(algorithm) { a =>
+    if (List("pagerank").contains(a)) Right(Unit)
+    else Left("unsupported algorithm " + a)
+  }
+
   override def onError(e: Throwable): Unit = {
-    printHelp()
+    System.err.println(
+      """Usage: ./run.sh algorithm output input
+        |  Algorithm: pagerank
+        |  Output: mongodb_collection_name
+        |  Input: edge_file_path node_file_path""".stripMargin)
     System.exit(1)
   }
   verify()
@@ -36,7 +48,7 @@ object App {
     val graph = GraphLoader.edgeListFile(sc, conf.edgeFile())
 
     var nodeVertices: RDD[(VertexId, String)] = null;
-    if (conf.nodeFile.isSupplied) {
+    if (!conf.nodeFile.isEmpty) {
       val nodeList = sc.textFile(conf.nodeFile())
       nodeVertices = nodeList.map(
         v => (v.split(" ")(0).toLong, v.split(" ")(1))
