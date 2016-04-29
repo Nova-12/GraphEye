@@ -41,6 +41,11 @@
       <artifactId>mongo-java-driver</artifactId>
       <version>3.2.2</version>
     </dependency>
+    <dependency>
+      <groupId>org.rogach</groupId>
+      <artifactId>scallop_2.10</artifactId>
+      <version>1.0.0</version>
+    </dependency>
   </dependencies>
 
   <build>
