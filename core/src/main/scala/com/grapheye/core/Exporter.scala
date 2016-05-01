@@ -31,5 +31,25 @@ class Exporter(mongoAddress: String, dbName: String, collectionName: String) {
       (v: (VertexId, (String, Double))) => insertPageRankEntry(v._2._1, v._2._2)
     )
   }
+  def insertTriangleCountEntry(node: String, triangles: Int) {
+    var document = new Document()
+    document.append("node", node)
+    document.append("triangles", triangles)
+    collection.insertOne(document)
+  }
+  def exportTriangleCount(result: VertexRDD[Int]) {
+    result.top(100) {
+      Ordering.by(_._2)
+    }.foreach(
+      (v: (VertexId, Int)) => insertTriangleCountEntry(v._1.toString, v._2)
+    )
+  }
+  def exportTriangleCountWithNode(result: VertexRDD[(String, Int)]) {
+    result.top(100) {
+      Ordering.by(_._2._2)
+    }.foreach(
+      (v: (VertexId, (String, Int))) => insertTriangleCountEntry(v._2._1, v._2._2)
+    )
+  }
 }
 
