@@ -6,6 +6,7 @@ import org.apache.spark.graphx.GraphLoader
 import org.apache.spark.graphx.VertexId
 import org.apache.spark.graphx.VertexRDD
 import org.apache.spark.graphx.Graph
+import org.apache.spark.graphx.lib.LabelPropagation
 import org.apache.spark.rdd.RDD
 
 import org.rogach.scallop.ScallopConf
@@ -19,14 +20,14 @@ class Conf(args: Seq[String]) extends ScallopConf(args) {
   val nodeFile = trailArg[String](required=false)
 
   validate(algorithm) { a =>
-    if (List("pagerank", "trianglecount").contains(a)) Right(Unit)
+    if (List("pagerank", "trianglecount", "labelpropagation").contains(a)) Right(Unit)
     else Left("unsupported algorithm " + a)
   }
 
   override def onError(e: Throwable): Unit = {
     System.err.println(
       """Usage: ./run.sh algorithm output input
-        |  Algorithm: pagerank, trianglecount
+        |  Algorithm: pagerank, trianglecount, labelpropagation
         |  Output: mongodb_collection_name
         |  Input: edge_file_path node_file_path""".stripMargin)
     System.exit(1)
@@ -59,6 +60,7 @@ object App {
     conf.algorithm() match {
       case "pagerank" => compute_pagerank(graph, nodeVertices, conf)
       case "trianglecount" => compute_trianglecount(graph, nodeVertices, conf)
+      case "labelpropagation" => compute_labelpropagation(graph, nodeVertices, conf)
     }
 
     System.out.println("Done!")
@@ -75,7 +77,16 @@ object App {
     System.out.println("Computing..")
     val numberOfTriangles = graph.triangleCount()
 
+    System.out.println("Exporting..")
     val exporter = new Exporter("localhost:27017", "test", conf.output(), "trianglecount")
     exporter.exportInt(numberOfTriangles.vertices, nodeVertices)
+  }
+    def compute_labelpropagation(graph: Graph[Int, Int], nodeVertices: RDD[(VertexId, String)], conf: Conf) {
+    System.out.println("Computing..")
+    val labelId = LabelPropagation.run(graph, 10)
+
+    System.out.println("Exporting..")
+    val exporter = new Exporter("localhost:27017", "test", conf.output(), "labelId")
+    exporter.exportVertexId(labelId.vertices, nodeVertices)
   }
 }
