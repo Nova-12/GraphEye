@@ -21,6 +21,13 @@ class Exporter(mongoAddress: String, dbName: String, collectionName: String,
     collection.insertOne(document)
   }
 
+  def insertIntEntry(node: String, value: Int) {
+    var document = new Document()
+    document.append("node", node)
+    document.append(valueName, value)
+    collection.insertOne(document)
+  }
+
   def exportDouble(data: VertexRDD[Double], nodeNames: RDD[(VertexId, String)]) {
 
     var dataWithNodeNames: RDD[(String, Double)] = null
@@ -61,7 +68,7 @@ class Exporter(mongoAddress: String, dbName: String, collectionName: String,
 
     dataWithNodeNames.sortBy(_._2)
     dataWithNodeNames.collect().foreach(
-      (v: (String, Int)) => insertDoubleEntry(v._1, v._2)
+      (v: (String, Int)) => insertIntEntry(v._1, v._2)
     )
   }
 }

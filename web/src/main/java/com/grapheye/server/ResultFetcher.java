@@ -11,32 +11,44 @@ import com.mongodb.client.FindIterable;
 
 public class ResultFetcher
 {
-    private static class PageRankBlock implements Block<Document>
+    private static class DoubleValueBlock implements Block<Document>
     {
-        private JSONArray array;
-        public PageRankBlock(JSONArray array)
+        private JSONArray resultArray;
+        private String valueName;
+        public DoubleValueBlock(JSONArray array, String valueName)
         {
-            this.array = array;
+            this.resultArray = array;
+            this.valueName = valueName;
         }
         @Override
         public void apply(final Document document)
         {
-            // "node" can be either Long(nodeId) or String(nodeName).
-            String node = null;
-            try {
-                node = document.getString("node");
-            }
-            catch (ClassCastException e) {
-                Long nodeId = document.getLong("node");
-                node = String.valueOf(nodeId);
-            }
-
-            Double rank = document.getDouble("rank");
-
+            String node = document.getString("node");
+            Double value = document.getDouble(valueName);
             JSONObject item = new JSONObject();
             item.put("node", node);
-            item.put("rank", rank);
-            array.add(item);
+            item.put(valueName, value);
+            resultArray.add(item);
+        }
+    }
+    private static class IntValueBlock implements Block<Document>
+    {
+        private JSONArray resultArray;
+        private String valueName;
+        public IntValueBlock(JSONArray array, String valueName)
+        {
+            this.resultArray = array;
+            this.valueName = valueName;
+        }
+        @Override
+        public void apply(final Document document)
+        {
+            String node = document.getString("node");
+            Integer value = document.getInteger(valueName);
+            JSONObject item = new JSONObject();
+            item.put("node", node);
+            item.put(valueName, value);
+            resultArray.add(item);
         }
     }
 
@@ -45,27 +57,21 @@ public class ResultFetcher
         MongoClient client = new MongoClient("localhost", 27017);
         MongoDatabase db = client.getDatabase("test");
 
+        JSONObject obj = new JSONObject();
+        obj.put("error", "null");
+        obj.put("algorithm", algorithm);
+
+        FindIterable<Document> it = db.getCollection(table).find().limit(100);
+        JSONArray data = new JSONArray();
+
         if (algorithm.equals("pagerank"))
-        {
-            FindIterable<Document> it = db.getCollection(table).find()
-                .sort(new Document("rank", 1))
-                .limit(10);
+            it.forEach(new DoubleValueBlock(data, "rank"));
+        else if (algorithm.equals("trianglecount"))
+            it.forEach(new IntValueBlock(data, "trianglecount"));
 
-            JSONObject obj = new JSONObject();
-            obj.put("error", null);
-            obj.put("algorithm", "pagerank");
+        obj.put("data", data);
 
-            JSONArray data = new JSONArray();
-            it.forEach(new PageRankBlock(data));
-            obj.put("data", data);
-            return obj;
-        }
-        else
-        {
-            JSONObject obj = new JSONObject();
-            obj.put("error", "Unsupported algorithm");
-            return obj;
-        }
+        return obj;
     }
 }
 
