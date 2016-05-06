@@ -55,6 +55,7 @@ object App {
       )
     }
 
+    /* Compute and export */
     conf.algorithm() match {
       case "pagerank" => compute_pagerank(graph, nodeVertices, conf)
       case "trianglecount" => compute_trianglecount(graph, nodeVertices, conf)
@@ -63,41 +64,18 @@ object App {
     System.out.println("Done!")
   }
   def compute_pagerank(graph: Graph[Int, Int], nodeVertices: RDD[(VertexId, String)], conf: Conf) {
-    
-    /* Compute */
     System.out.println("Computing..")
     val ranks = graph.pageRank(0.0001)
 
-    /* Export */
     System.out.println("Exporting..")
-    val exporter = new Exporter("localhost:27017", "test", conf.output())
-    if (nodeVertices != null){
-      val ranksWithNode = ranks.outerJoinVertices(nodeVertices) {
-        (v, rank, title) => (title.getOrElse(" "), rank)
-      }
-      exporter.exportPageRankWithNode(ranksWithNode.vertices)
-    }
-    else{
-      exporter.exportPageRank(ranks.vertices)
-    }
+    val exporter = new Exporter("localhost:27017", "test", conf.output(), "rank")
+    exporter.exportDouble(ranks.vertices, nodeVertices)
   }
   def compute_trianglecount(graph: Graph[Int, Int], nodeVertices: RDD[(VertexId, String)], conf: Conf) {
-    
-    /* Compute */
     System.out.println("Computing..")
     val numberOfTriangles = graph.triangleCount()
 
-    /* Export */
-    System.out.println("Exporting..")
-    val exporter = new Exporter("localhost:27017", "test", conf.output())
-    if (nodeVertices != null){
-      val numberOfTrianglesWithNode = numberOfTriangles.outerJoinVertices(nodeVertices) {
-        (v, numberOfTriangles, title) => (title.getOrElse(" "), numberOfTriangles)
-      }
-      exporter.exportTriangleCountWithNode(numberOfTrianglesWithNode.vertices)
-    }
-    else{
-      exporter.exportTriangleCount(numberOfTriangles.vertices)
-    }
+    val exporter = new Exporter("localhost:27017", "test", conf.output(), "trianglecount")
+    exporter.exportInt(numberOfTriangles.vertices, nodeVertices)
   }
 }
