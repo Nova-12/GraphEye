@@ -68,6 +68,10 @@ public class ResultFetcher
             it.forEach(new DoubleValueBlock(data, "rank"));
         else if (algorithm.equals("trianglecount"))
             it.forEach(new IntValueBlock(data, "trianglecount"));
+        else if (algorithm.equals("labelpropagation"))
+            it.forEach(new IntValueBlock(data, "labelId"));
+        else if (algorithm.equals("connectedcomponents"))
+            it.forEach(new IntValueBlock(data, "connected"));
 
         obj.put("data", data);
 

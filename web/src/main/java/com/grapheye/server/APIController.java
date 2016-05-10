@@ -29,7 +29,7 @@ public class APIController
     @Value("${grapheye.core.path}")
     private String grapheyeCorePath;
 
-    @RequestMapping(value="/debug", method=RequestMethod.GET)
+    @RequestMapping(value="/debug", method=RequestMethod.GET, produces="application/json;charset=UTF-8")
     public ModelAndView handleDebug()
     {
         ModelAndView model = new ModelAndView();
@@ -38,7 +38,7 @@ public class APIController
         return model;
     }
 
-    @RequestMapping(value="/launch", method=RequestMethod.POST)
+    @RequestMapping(value="/launch", method=RequestMethod.POST, produces="application/json;charset=UTF-8")
     @ResponseBody
     public String handleLaunch(@RequestBody String requestBody)
     {
@@ -77,7 +77,7 @@ public class APIController
         return result.toJSONString();
     }
 
-    @RequestMapping(value="/status/{jobId}", method=RequestMethod.GET)
+    @RequestMapping(value="/status/{jobId}", method=RequestMethod.GET, produces="application/json;charset=UTF-8")
     @ResponseBody
     public String handleStatus(@PathVariable("jobId") int jobId)
     {
@@ -96,7 +96,7 @@ public class APIController
         return result.toJSONString();
     }
 
-    @RequestMapping(value="/result/{jobId}", method=RequestMethod.GET)
+    @RequestMapping(value="/result/{jobId}", method=RequestMethod.GET, produces="application/json;charset=UTF-8")
     @ResponseBody
     public String handleResult(@PathVariable("jobId") int jobId)
     {
