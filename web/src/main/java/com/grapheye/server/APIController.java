@@ -101,4 +101,15 @@ public class APIController
         JSONObject result = job.getResult();
         return result.toJSONString();
     }
+
+    @RequestMapping(value="/list", method=RequestMethod.GET, produces="application/json;charset=UTF-8")
+    @ResponseBody
+    public String handleList()
+    {
+        JSONArray jobs = DBClient.getJobsList();
+        JSONObject obj = new JSONObject();
+        obj.put("error", null);
+        obj.put("jobs", jobs);
+        return obj.toJSONString();
+    }
 }

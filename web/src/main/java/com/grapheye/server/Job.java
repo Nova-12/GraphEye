@@ -1,11 +1,14 @@
 package com.grapheye.server;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -20,7 +23,7 @@ public class Job
     private String collectionName;
     private String title;
     private String group;
-    private Date date;
+    private String date;
 
     /* Not saved */
     private String inputType;
@@ -41,7 +44,7 @@ public class Job
     }
 
     public Job(int jobid, String algorithm, String collectionName,
-               String title, String group, Date date)
+               String title, String group, String date)
     {
         this.jobid = jobid;
         this.algorithm = algorithm;
@@ -59,11 +62,18 @@ public class Job
         return job;
     }
 
+    private static String iso8601now() {
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+        df.setTimeZone(tz);
+        return df.format(new Date());
+    }
+
     private void launch(String jsonString)
         throws ParseException, JsonTypeException, IOException
     {
         parseRequest(jsonString);
-        date = new Date();
+        date = iso8601now();
 
         jobid = DBClient.getNextJobId();
         collectionName = String.format("result_%d", jobid);
@@ -139,6 +149,5 @@ public class Job
     public String getAlgorithm() { return algorithm; }
     public String getTitle() { return title; }
     public String getGroup() { return group; }
-    public Date getDate() { return date; }
     public String getCollectionName() { return collectionName; }
 }

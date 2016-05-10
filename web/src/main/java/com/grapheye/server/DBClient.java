@@ -1,6 +1,5 @@
 package com.grapheye.server;
 
-import java.util.Date;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.bson.Document;
@@ -10,6 +9,63 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Filters;
+
+class DoubleValueBlock implements Block<Document>
+{
+    private JSONArray resultArray;
+    private String valueName;
+    public DoubleValueBlock(JSONArray array, String valueName)
+    {
+        this.resultArray = array;
+        this.valueName = valueName;
+    }
+    @Override
+    public void apply(final Document document)
+    {
+        JSONObject item = new JSONObject();
+        item.put("node", document.getString("node"));
+        item.put(valueName, document.getDouble(valueName));
+        resultArray.add(item);
+    }
+}
+
+class IntValueBlock implements Block<Document>
+{
+    private JSONArray resultArray;
+    private String valueName;
+    public IntValueBlock(JSONArray array, String valueName)
+    {
+        this.resultArray = array;
+        this.valueName = valueName;
+    }
+    @Override
+    public void apply(final Document document)
+    {
+        JSONObject item = new JSONObject();
+        item.put("node", document.getString("node"));
+        item.put(valueName, document.getInteger(valueName));
+        resultArray.add(item);
+    }
+}
+
+class JobBlock implements Block<Document>
+{
+    private JSONArray resultArray;
+    public JobBlock(JSONArray array) {
+        this.resultArray = array;
+    }
+    @Override
+    public void apply(final Document doc)
+    {
+        JSONObject item = new JSONObject();
+        item.put("jobid", doc.getInteger("jobid"));
+        item.put("algorithm", doc.getString("algorithm"));
+        item.put("title", doc.getString("title"));
+        item.put("group", doc.getString("group"));
+        item.put("date", doc.getString("date"));
+        resultArray.add(item);
+    }
+}
 
 public class DBClient
 {
@@ -43,7 +99,7 @@ public class DBClient
     }
 
     public static int addJob(int jobid, String algorithm, String collectionName,
-                             String title, String group, Date date)
+                             String title, String group, String date)
     {
         maybeInit();
         Document jobEntry = new Document("jobid", jobid)
@@ -54,47 +110,6 @@ public class DBClient
                             .append("date", date);
         db.getCollection(jobsCollectionName).insertOne(jobEntry);
         return jobid;
-    }
-
-    private static class DoubleValueBlock implements Block<Document>
-    {
-        private JSONArray resultArray;
-        private String valueName;
-        public DoubleValueBlock(JSONArray array, String valueName)
-        {
-            this.resultArray = array;
-            this.valueName = valueName;
-        }
-        @Override
-        public void apply(final Document document)
-        {
-            String node = document.getString("node");
-            Double value = document.getDouble(valueName);
-            JSONObject item = new JSONObject();
-            item.put("node", node);
-            item.put(valueName, value);
-            resultArray.add(item);
-        }
-    }
-    private static class IntValueBlock implements Block<Document>
-    {
-        private JSONArray resultArray;
-        private String valueName;
-        public IntValueBlock(JSONArray array, String valueName)
-        {
-            this.resultArray = array;
-            this.valueName = valueName;
-        }
-        @Override
-        public void apply(final Document document)
-        {
-            String node = document.getString("node");
-            Integer value = document.getInteger(valueName);
-            JSONObject item = new JSONObject();
-            item.put("node", node);
-            item.put(valueName, value);
-            resultArray.add(item);
-        }
     }
 
     public static Job loadJob(int jobid)
@@ -112,10 +127,9 @@ public class DBClient
                           jobEntry.getString("collectionName"),
                           jobEntry.getString("title"),
                           jobEntry.getString("group"),
-                          jobEntry.getDate("date"));
+                          jobEntry.getString("date"));
         return job;
     }
-
     public static JSONObject getResult(String algorithm, String table)
     {
         maybeInit();
@@ -139,5 +153,15 @@ public class DBClient
         obj.put("data", data);
 
         return obj;
+    }
+
+    public static JSONArray getJobsList()
+    {
+        maybeInit();
+
+        JSONArray jobs = new JSONArray();
+        FindIterable<Document> it = db.getCollection(jobsCollectionName).find();
+        it.forEach(new JobBlock(jobs));
+        return jobs;
     }
 }
