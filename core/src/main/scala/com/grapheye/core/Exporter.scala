@@ -31,7 +31,7 @@ class Exporter(mongoAddress: String, dbName: String, collectionName: String,
   def insertVertexIdEntry(node: String, value: VertexId) {
     var document = new Document()
     document.append("node", node)
-    document.append(valueName, value)
+    document.append(valueName, value.toInt)
     collection.insertOne(document)
   }
 

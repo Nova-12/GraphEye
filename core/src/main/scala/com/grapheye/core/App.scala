@@ -20,14 +20,14 @@ class Conf(args: Seq[String]) extends ScallopConf(args) {
   val nodeFile = trailArg[String](required=false)
 
   validate(algorithm) { a =>
-    if (List("pagerank", "trianglecount", "labelpropagation").contains(a)) Right(Unit)
+    if (List("pagerank", "trianglecount", "labelpropagation", "connectedcomponents").contains(a)) Right(Unit)
     else Left("unsupported algorithm " + a)
   }
 
   override def onError(e: Throwable): Unit = {
     System.err.println(
       """Usage: ./run.sh algorithm output input
-        |  Algorithm: pagerank, trianglecount, labelpropagation
+        |  Algorithm: pagerank, trianglecount, labelpropagation, connectedcomponents
         |  Output: mongodb_collection_name
         |  Input: edge_file_path node_file_path""".stripMargin)
     System.exit(1)
@@ -61,6 +61,7 @@ object App {
       case "pagerank" => compute_pagerank(graph, nodeVertices, conf)
       case "trianglecount" => compute_trianglecount(graph, nodeVertices, conf)
       case "labelpropagation" => compute_labelpropagation(graph, nodeVertices, conf)
+      case "connectedcomponents" =>compute_connectedcomponents(graph, nodeVertices, conf)
     }
 
     System.out.println("Done!")
@@ -88,5 +89,13 @@ object App {
     System.out.println("Exporting..")
     val exporter = new Exporter("localhost:27017", "test", conf.output(), "labelId")
     exporter.exportVertexId(labelId.vertices, nodeVertices)
+  }
+  def compute_connectedcomponents(graph: Graph[Int, Int], nodeVertices: RDD[(VertexId, String)], conf: Conf) {
+    System.out.println("Computing..")
+    val connectedNodes = graph.connectedComponents()
+
+    System.out.println("Exporting..")
+    val exporter = new Exporter("localhost:27017", "test", conf.output(), "connected")
+    exporter.exportVertexId(connectedNodes.vertices, nodeVertices)
   }
 }
