@@ -32,3 +32,12 @@ public class SafeJson
             throw new JsonTypeException("Key error: " + key);
     }
 }
+
+class JsonTypeException extends Exception
+{
+    public JsonTypeException(String msg)
+    {
+        super(msg);
+    }
+}
+
