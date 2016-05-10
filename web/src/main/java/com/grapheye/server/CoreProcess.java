@@ -9,35 +9,22 @@ import java.io.InputStreamReader;
 
 public class CoreProcess
 {
+    private static String grapheyeCorePath;
     private static final Logger logger =
         Logger.getLogger(CoreProcess.class);
 
     private Process process;
 
-    public CoreProcess()
+    public CoreProcess(List<String> args) throws IOException
     {
-        process = null;
-    }
-
-    private boolean execute(String[] cmd)
-    {
-        Process newProcess = null;
-        try {
-            newProcess = Runtime.getRuntime().exec(cmd);
-        }
-        catch (IOException e) {
-            logger.error("execution error", e);
-            return false;
-        }
-        process = newProcess;
-        return true;
-    }
-
-    public boolean execute(String core, List<String> args)
-    {
-        args.add(0, core);
+        args.add(0, grapheyeCorePath);
         String[] cmd = args.toArray(new String[args.size()]);
-        return execute(cmd);
+        process = Runtime.getRuntime().exec(cmd);
+    }
+
+    public static void setGrapheyeCorePath(String path)
+    {
+        grapheyeCorePath = path;
     }
 
     private void flushStdio()
@@ -59,21 +46,18 @@ public class CoreProcess
         }
     }
 
-    public boolean isRunning()
+    public String getStatus()
     {
+        int exitValue = -1;
         try {
-            process.exitValue();
+            exitValue = process.exitValue();
         }
         catch (IllegalThreadStateException e) {
-            return true;
+            return "running";
         }
-        // flushStdio();
-        return false;
-    }
-
-    public int getExitValue()
-    {
-        return process.exitValue();
+        if (exitValue == 0)
+            return "success";
+        else
+            return "fail";
     }
 }
-

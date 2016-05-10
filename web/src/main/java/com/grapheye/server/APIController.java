@@ -1,6 +1,7 @@
 package com.grapheye.server;
 
 import java.util.List;
+import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
@@ -42,48 +43,39 @@ public class APIController
     @ResponseBody
     public String handleLaunch(@RequestBody String requestBody)
     {
-        JSONParser parser = new JSONParser();
-        JSONObject json = null;
+        CoreProcess.setGrapheyeCorePath(grapheyeCorePath);
+        Job job = null;
+
         try {
-            json = (JSONObject)parser.parse(requestBody);
+            job = Job.fromJson(requestBody);
         }
         catch (ParseException e) {
-            logger.info("/launch: parse failed " + requestBody);
+            logger.info("/launch: parse failed: " + requestBody);
             return "{\"error\":\"bad request\"}";
-        }
-
-        LaunchRequest request = new LaunchRequest();
-        try {
-            request.parse(json);
         }
         catch (JsonTypeException e) {
-            logger.info("/launch: bad request format " + requestBody);
+            logger.info("/launch: bad request format: " + requestBody);
             return "{\"error\":\"bad request\"}";
         }
-
-        List<String> args = request.getArgs();
-
-        CoreProcess process = new CoreProcess();
-        boolean executed = process.execute(grapheyeCorePath, args);
-        if (!executed)
+        catch (IOException e) {
+            logger.info("/launch: cannot execute job: " + requestBody);
             return "{\"error\":\"Cannot execute job\"}";
-
-        int jobId = JobManager.addJob(request, process);
+        }
 
         JSONObject result = new JSONObject();
         result.put("error", null);
-        result.put("jobid", jobId);
+        result.put("jobid", job.getJobid());
 
         return result.toJSONString();
     }
 
-    @RequestMapping(value="/status/{jobId}", method=RequestMethod.GET, produces="application/json;charset=UTF-8")
+    @RequestMapping(value="/status/{jobid}", method=RequestMethod.GET, produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String handleStatus(@PathVariable("jobId") int jobId)
+    public String handleStatus(@PathVariable("jobid") int jobid)
     {
-        String status = JobManager.getStatus(jobId);
+        Job job = Job.fromJobid(jobid);
         JSONObject result = new JSONObject();
-        if (status == null)
+        if (job == null)
         {
             result.put("error", "No such job");
             result.put("status", null);
@@ -91,27 +83,22 @@ public class APIController
         else
         {
             result.put("error", null);
-            result.put("status", status);
+            result.put("status", job.getStatus());
         }
         return result.toJSONString();
     }
 
-    @RequestMapping(value="/result/{jobId}", method=RequestMethod.GET, produces="application/json;charset=UTF-8")
+    @RequestMapping(value="/result/{jobid}", method=RequestMethod.GET, produces="application/json;charset=UTF-8")
     @ResponseBody
-    public String handleResult(@PathVariable("jobId") int jobId)
+    public String handleResult(@PathVariable("jobid") int jobid)
     {
-        String status = JobManager.getStatus(jobId);
-        if (status == null)
-        {
+        Job job = Job.fromJobid(jobid);
+        if (job == null)
             return "{\"error\":\"No such job\"}";
-        }
-        if (status != "success")
-        {
+        if (job.getStatus() != "success")
             return "{\"error\":\"Result not produced\"}";
-        }
 
-        JSONObject result = JobManager.getResult(jobId);
+        JSONObject result = job.getResult();
         return result.toJSONString();
     }
 }
-

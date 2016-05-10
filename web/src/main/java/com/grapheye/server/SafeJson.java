@@ -23,6 +23,15 @@ public class SafeJson
             throw new JsonTypeException("Key error: " + key);
     }
 
+    public String getStringOrNull(String key)
+    {
+        Object item = json.get(key);
+        if (item != null && item instanceof String)
+            return (String)item;
+        else
+            return null;
+    }
+
     public JSONObject getObject(String key) throws JsonTypeException
     {
         Object item = json.get(key);

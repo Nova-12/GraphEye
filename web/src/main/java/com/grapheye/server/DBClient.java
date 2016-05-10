@@ -8,9 +8,44 @@ import com.mongodb.Block;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.Filters;
 
-public class ResultFetcher
+public class DBClient
 {
+    public static String dbName = "test";
+
+    /* TODO: This is not thread-safe. Multiple requests can result in
+     * two jobs having same jobid. */
+    public static int getNextJobId()
+    {
+        MongoClient client = new MongoClient("localhost", 27017);
+        MongoDatabase db = client.getDatabase("test");
+        Document lastJob = db.getCollection("grapheye_jobs")
+                            .find()
+                            .sort(new Document("jobid", -1))
+                            .first();
+        if (lastJob == null)
+            return 1;
+        else
+            return lastJob.getInteger("jobid").intValue() + 1;
+    }
+
+    public static int addJob(Job job)
+    {
+        int jobid = getNextJobId();
+        Document jobEntry = new Document("jobid", jobid)
+                            .append("algorithm", job.getAlgorithm())
+                            .append("collectionName", job.getCollectionName())
+                            .append("title", job.getTitle())
+                            .append("group", job.getGroup())
+                            .append("date", job.getDate());
+        MongoClient client = new MongoClient("localhost", 27017);
+        MongoDatabase db = client.getDatabase("test");
+        db.getCollection("grapheye_jobs").insertOne(jobEntry);
+        return jobid;
+    }
+
     private static class DoubleValueBlock implements Block<Document>
     {
         private JSONArray resultArray;
