@@ -1,8 +1,8 @@
 package com.grapheye.server;
 
+import java.util.Date;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
 import org.bson.Document;
 import com.mongodb.Block;
 import com.mongodb.MongoClient;
@@ -13,15 +13,26 @@ import com.mongodb.client.model.Filters;
 
 public class DBClient
 {
-    public static String dbName = "test";
+    private static String dbName = "test";
+    private static String jobsCollectionName = "jobs";
+
+    private static MongoClient client = null;
+    private static MongoDatabase db = null;
+
+    private static void maybeInit()
+    {
+        if (client == null) {
+            client = new MongoClient("localhost", 27017);
+            db = client.getDatabase("test");
+        }
+    }
 
     /* TODO: This is not thread-safe. Multiple requests can result in
      * two jobs having same jobid. */
     public static int getNextJobId()
     {
-        MongoClient client = new MongoClient("localhost", 27017);
-        MongoDatabase db = client.getDatabase("test");
-        Document lastJob = db.getCollection("grapheye_jobs")
+        maybeInit();
+        Document lastJob = db.getCollection(jobsCollectionName)
                             .find()
                             .sort(new Document("jobid", -1))
                             .first();
@@ -31,18 +42,17 @@ public class DBClient
             return lastJob.getInteger("jobid").intValue() + 1;
     }
 
-    public static int addJob(Job job)
+    public static int addJob(int jobid, String algorithm, String collectionName,
+                             String title, String group, Date date)
     {
-        int jobid = getNextJobId();
+        maybeInit();
         Document jobEntry = new Document("jobid", jobid)
-                            .append("algorithm", job.getAlgorithm())
-                            .append("collectionName", job.getCollectionName())
-                            .append("title", job.getTitle())
-                            .append("group", job.getGroup())
-                            .append("date", job.getDate());
-        MongoClient client = new MongoClient("localhost", 27017);
-        MongoDatabase db = client.getDatabase("test");
-        db.getCollection("grapheye_jobs").insertOne(jobEntry);
+                            .append("algorithm", algorithm)
+                            .append("collectionName", collectionName)
+                            .append("title", title)
+                            .append("group", group)
+                            .append("date", date);
+        db.getCollection(jobsCollectionName).insertOne(jobEntry);
         return jobid;
     }
 
@@ -87,16 +97,34 @@ public class DBClient
         }
     }
 
+    public static Job loadJob(int jobid)
+    {
+        maybeInit();
+
+        Document jobEntry = db.getCollection(jobsCollectionName)
+                                .find(new Document("jobid", jobid))
+                                .first();
+        if (jobEntry == null)
+            return null;
+
+        Job job = new Job(jobEntry.getInteger("jobid").intValue(),
+                          jobEntry.getString("algorithm"),
+                          jobEntry.getString("collectionName"),
+                          jobEntry.getString("title"),
+                          jobEntry.getString("group"),
+                          jobEntry.getDate("date"));
+        return job;
+    }
+
     public static JSONObject getResult(String algorithm, String table)
     {
-        MongoClient client = new MongoClient("localhost", 27017);
-        MongoDatabase db = client.getDatabase("test");
+        maybeInit();
 
         JSONObject obj = new JSONObject();
-        obj.put("error", "null");
+        obj.put("error", null);
         obj.put("algorithm", algorithm);
 
-        FindIterable<Document> it = db.getCollection(table).find().limit(100);
+        FindIterable<Document> it = db.getCollection(table).find();
         JSONArray data = new JSONArray();
 
         if (algorithm.equals("pagerank"))
@@ -113,4 +141,3 @@ public class DBClient
         return obj;
     }
 }
-

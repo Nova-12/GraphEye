@@ -36,32 +36,52 @@ public class Job
     private static final Logger logger =
         Logger.getLogger(Job.class);
 
+    public Job()
+    {
+    }
+
+    public Job(int jobid, String algorithm, String collectionName,
+               String title, String group, Date date)
+    {
+        this.jobid = jobid;
+        this.algorithm = algorithm;
+        this.collectionName = collectionName;
+        this.title = title;
+        this.group = group;
+        this.date = date;
+    }
+
     public static Job fromJson(String jsonString)
         throws ParseException, JsonTypeException, IOException
     {
         Job job = new Job();
-
-        job.parseRequest(jsonString);
-        job.date = new Date();
-
-        job.jobid = DBClient.getNextJobId();
-        job.collectionName = "grpheye_result_" + String.valueOf(job.jobid);
-
-        job.startCore();
-
-        job.jobid = DBClient.addJob(job);
-
-        recentJobs.put(new Integer(job.jobid), job);
+        job.launch(jsonString);
         return job;
     }
 
-    public static Job fromJobid(int id)
+    private void launch(String jsonString)
+        throws ParseException, JsonTypeException, IOException
     {
-        Integer id_ = new Integer(id);
-        if (recentJobs.containsKey(id_))
-            return recentJobs.get(id_);
+        parseRequest(jsonString);
+        date = new Date();
+
+        jobid = DBClient.getNextJobId();
+        collectionName = String.format("result_%d", jobid);
+
+        startCore();
+
+        jobid = DBClient.addJob(jobid, algorithm, collectionName, title, group, date);
+
+        recentJobs.put(new Integer(jobid), this);
+    }
+
+    public static Job fromJobid(int jobid)
+    {
+        Integer id = new Integer(jobid);
+        if (recentJobs.containsKey(id))
+            return recentJobs.get(id);
         else
-            return null;
+            return DBClient.loadJob(jobid);
     }
 
     private void parseRequest(String jsonString) throws ParseException, JsonTypeException
@@ -99,12 +119,20 @@ public class Job
 
     public String getStatus()
     {
-        return process.getStatus();
+        /* TODO: Check if the job saved in DB was a success. */
+        if (process == null)
+            return "success";
+        else
+            return process.getStatus();
     }
 
     public JSONObject getResult()
     {
-        return DBClient.getResult(algorithm, collectionName);
+        JSONObject result = DBClient.getResult(algorithm, collectionName);
+        result.put("date", date);
+        result.put("title", title);
+        result.put("group", group);
+        return result;
     }
 
     public int getJobid() { return jobid; }
