@@ -51,8 +51,7 @@ class Exporter(mongoAddress: String, dbName: String, collectionName: String,
       )
     }
 
-    dataWithNodeNames.sortBy(_._2)
-    dataWithNodeNames.collect().foreach(
+    dataWithNodeNames.sortBy(_._2, false).collect().foreach(
       (v: (String, Double)) => insertDoubleEntry(v._1, v._2)
     )
   }
@@ -73,8 +72,7 @@ class Exporter(mongoAddress: String, dbName: String, collectionName: String,
       )
     }
 
-    dataWithNodeNames.sortBy(_._2)
-    dataWithNodeNames.collect().foreach(
+    dataWithNodeNames.sortBy(_._2, false).collect().foreach(
       (v: (String, Int)) => insertIntEntry(v._1, v._2)
     )
   }
@@ -95,8 +93,7 @@ class Exporter(mongoAddress: String, dbName: String, collectionName: String,
       )
     }
 
-    dataWithNodeNames.sortBy(_._2)
-    dataWithNodeNames.collect().foreach(
+    dataWithNodeNames.sortBy(_._2, false).collect().foreach(
       (v: (String, VertexId)) => insertVertexIdEntry(v._1, v._2)
     )
   }

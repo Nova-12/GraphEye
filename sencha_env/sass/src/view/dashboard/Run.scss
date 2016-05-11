@@ -1,0 +1,29 @@
+.runButtonCls {
+    width: 26px;
+    height: 26px;
+    //  background-color: transparent !important;
+    background: url('images/RunButton.png') no-repeat;
+    background-size: contain !important;
+    border-style: none !important;
+    border-radius: 0px !important;
+}
+
+.removeButtonCls :hover {
+    width: 26px;
+    height: 26px;
+    //  background-color: transparent !important;
+    background: url('images/RunButtonHover.png') no-repeat;
+    background-size: contain !important;
+    border-style: none !important;
+    border-radius: 0px !important;
+}
+
+.removeButtonCls :active {
+    width: 26px;
+    height: 26px;
+    //  background-color: transparent !important;
+    background: url('images/RunButtonPressed.png') no-repeat;
+    background-size: contain !important;
+    border-style: none !important;
+    border-radius: 0px !important;
+}

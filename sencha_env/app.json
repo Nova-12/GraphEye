@@ -65,7 +65,8 @@
      *      ]
      */
     "requires": [
-        "font-awesome"
+        "font-awesome",
+	"ux"
     ],
 
     /**
@@ -124,7 +125,8 @@
          *      +-----------------+
          */
         "etc": [
-            "sass/etc/all.scss"
+            "sass/etc/all.scss",
+	    "${toolkit.name}/sass/etc/all.scss"
         ],
 
         /**
@@ -493,7 +495,22 @@
      */
     
     "archivePath": "archive",
-    
+    "slicer": {
+	"js": [
+	    {
+		"path": "sass/example/custom.js",
+		"isWidgetManifest": true
+	    }
+	],
+	"output": {
+	    "appCache": {
+		"enable": false
+	    }
+	},
+	"cache": {
+	    "enable": false
+	}
+    },
 
 
     /**

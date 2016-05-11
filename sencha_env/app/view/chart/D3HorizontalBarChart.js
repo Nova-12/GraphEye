@@ -74,28 +74,8 @@ Ext.define('tempapp.view.main.D3HorizontalBarChart', {
 		Ext.Array.each(me.resultData.data, function(item){
 		    singleKeyFormat[0].values.push(item);
 		});
-		console.log("singleKeyFormat = ");
-		console.log(singleKeyFormat);
 		me.localData = singleKeyFormat;
 		setupChart(me.localData);
-		/*
-                d3.text(me.dataUrl,'text/plain', function(error) {
-                    if (error) return console.warn(error);
-                }).on("load", function(data) {
-                        var decodedData = Ext.JSON.decode(data);
-			console.log("decodedData = ")
-			console.log(decodedData)
-                        var singleKeyFormat = [{"key":me.seriesTitle,"color": me.barColor, "values":[]}];
-                        console.log(singleKeyFormat);
-
-                        Ext.Array.each(decodedData.data, function(item){
-                            singleKeyFormat[0].values.push(item);
-                        });
-                        console.log(singleKeyFormat);
-                        me.localData = singleKeyFormat;
-                        //console.log(me.localData);
-                        setupChart(me.localData);
-                    });*/
             } else {
                 setupChart(me.localData);
             }
@@ -135,7 +115,16 @@ Ext.define('tempapp.view.main.D3HorizontalBarChart', {
                     return d.node;
                 })
                 .y(function(d) {
-                    return d.rank;
+		    switch(me.resultData.algorithm){
+			case 'pagerank':
+			    return d.rank;
+			case 'trianglecount':
+			    return d.trianglecount;
+			case 'connectedcomponent':
+			    return d.labelId;
+			case 'labelpropagation':
+			    return d.connected;
+		    }
                 })
                 .margin({top: 30, right: 20, bottom: 50, left: 175})
                 .showValues(true)           //Show bar value next to each bar.
