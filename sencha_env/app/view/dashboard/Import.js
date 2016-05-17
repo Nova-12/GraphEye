@@ -29,13 +29,13 @@ Ext.define('grapheye.view.dashboard.Import', {
 
     items: [
 	{
-	    xtype: 'filefield',
+	    xtype: 'textfield',
 	    id: 'edgefilepath',
 	    fieldLabel: 'Edgefile Path',
 	    allowBlank: false
 	},
         {
-	    xtype: 'filefield',
+	    xtype: 'textfield',
 	    id: 'nodefilepath',
 	    fieldLabel: 'Nodefile Path',
 	    allowBlank: true

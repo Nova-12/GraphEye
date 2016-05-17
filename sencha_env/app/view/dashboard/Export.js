@@ -24,6 +24,7 @@ Ext.define('grapheye.view.dashboard.Export', {
 	    formBind: true,
 	    handler: function(){
 		grapheye.store.Request.title = Ext.getCmp('exporttitle').getValue();
+		grapheye.store.Request.group = Ext.getCmp('exportgroup').getValue();
 		console.log(grapheye.store.Request);
 	    }
 	}
@@ -32,8 +33,13 @@ Ext.define('grapheye.view.dashboard.Export', {
     items: [
 	{
 	    xtype: 'textfield',
-	    fieldLabel: 'Enter export destination',
+	    fieldLabel: 'Name',
 	    id: 'exporttitle'
+	},
+	{
+	    xtype: 'textfield',
+	    fieldLabel: 'Group name',
+	    id: 'exportgroup'
 	}
     ]
 });

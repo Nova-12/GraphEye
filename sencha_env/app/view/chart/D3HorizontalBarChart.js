@@ -81,7 +81,7 @@ Ext.define('tempapp.view.main.D3HorizontalBarChart', {
                 setupChart(me.localData);
             }
         } else {
-            throw 'dataUrl is required';
+            throw 'result data is required';
         }
 
         function setupChart(data){

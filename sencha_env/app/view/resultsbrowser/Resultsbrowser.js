@@ -15,6 +15,7 @@ Ext.define('grapheye.view.resultsbrowser.Resultsbrowser', {
     items: [
 	{
 	    xtype: 'rbresultlist',
+	    reference: 'rbresultlist',
 	    title: 'Result List'
 	},
 	{
@@ -23,10 +24,6 @@ Ext.define('grapheye.view.resultsbrowser.Resultsbrowser', {
 	    reference: 'rbCharts',
 	    items:[
 	    ]
-	},
-	{
-	    xtype: 'button',
-	    handler: 'onCompare'
 	},
 	{
 	    xtype: 'container',

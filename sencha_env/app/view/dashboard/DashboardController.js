@@ -21,8 +21,8 @@ Ext.define('grapheye.view.dashboard.DashboardController', {
 	var me = this;
 	var edgefilepath = Ext.getCmp('edgefilepath').getValue();
 	var nodefilepath = Ext.getCmp('nodefilepath').getValue();
-	edgefilepath = edgefilepath.replace('C:\\fakepath\\', '/Users/sypark0614/Desktop/'); //hard-coded
-	nodefilepath = nodefilepath.replace('C:\\fakepath\\', '/Users/sypark0614/Desktop/'); //hard-coded
+	//edgefilepath = edgefilepath.replace('C:\\fakepath\\', '/Users/sypark0614/Desktop/'); //hard-coded
+	//nodefilepath = nodefilepath.replace('C:\\fakepath\\', '/Users/sypark0614/Desktop/'); //hard-coded
 	grapheye.store.Request.importEdgeFile = edgefilepath;
 	grapheye.store.Request.importNodeFile = nodefilepath;
 	console.log(grapheye.store.Request);
@@ -106,9 +106,6 @@ Ext.define('grapheye.view.dashboard.DashboardController', {
 
                 success:function(result, request){
                     var jsonResult = Ext.JSON.decode(result.responseText);
-		    console.log("Result fetched from MongoDB: ");
-		    console.log(jsonResult);
-		    grapheye.store.Results.results.push(jsonResult);
 		    me.getChart(jsonResult);
                     Ext.Msg.alert("Success", "Data return from mongodb" + jsonResult.algorithm);
                 },
