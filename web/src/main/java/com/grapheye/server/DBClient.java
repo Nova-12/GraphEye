@@ -7,8 +7,6 @@ import com.mongodb.Block;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.FindIterable;
-import com.mongodb.client.model.Sorts;
-import com.mongodb.client.model.Filters;
 
 class DoubleValueBlock implements Block<Document>
 {
@@ -79,7 +77,7 @@ public class DBClient
     {
         if (client == null) {
             client = new MongoClient("localhost", 27017);
-            db = client.getDatabase("test");
+            db = client.getDatabase(dbName);
         }
     }
 

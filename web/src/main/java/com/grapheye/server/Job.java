@@ -6,11 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import org.apache.log4j.Logger;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -32,14 +29,10 @@ public class Job
     private CoreProcess process;
 
     /* List of running or just finished jobs */
-    private static Map<Integer,Job> recentJobs =
+    private static final Map<Integer,Job> recentJobs =
         new HashMap<Integer,Job>();
 
-    private static String grapheyeCorePath;
-    private static final Logger logger =
-        Logger.getLogger(Job.class);
-
-    public Job()
+    private Job()
     {
     }
 
@@ -146,8 +139,4 @@ public class Job
     }
 
     public int getJobid() { return jobid; }
-    public String getAlgorithm() { return algorithm; }
-    public String getTitle() { return title; }
-    public String getGroup() { return group; }
-    public String getCollectionName() { return collectionName; }
 }

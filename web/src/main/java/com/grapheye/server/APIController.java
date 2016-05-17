@@ -1,13 +1,11 @@
 package com.grapheye.server;
 
-import java.util.List;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.ui.Model;
 
 @Controller
 public class APIController
@@ -95,7 +92,7 @@ public class APIController
         Job job = Job.fromJobid(jobid);
         if (job == null)
             return "{\"error\":\"No such job\"}";
-        if (job.getStatus() != "success")
+        if (!job.getStatus().equals("success"))
             return "{\"error\":\"Result not produced\"}";
 
         JSONObject result = job.getResult();

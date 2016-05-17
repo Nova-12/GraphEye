@@ -30,7 +30,7 @@ public class CoreProcess
     private void flushStdio()
     {
         try {
-            String line = null;
+            String line;
             BufferedReader stdout = new BufferedReader(
                     new InputStreamReader(process.getInputStream()));
             BufferedReader stderr = new BufferedReader(
@@ -43,12 +43,13 @@ public class CoreProcess
             }
         }
         catch (IOException e) {
+            logger.error("Error communicating with subprocess", e);
         }
     }
 
     public String getStatus()
     {
-        int exitValue = -1;
+        int exitValue;
         try {
             exitValue = process.exitValue();
         }
