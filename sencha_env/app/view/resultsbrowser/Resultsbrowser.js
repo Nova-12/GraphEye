@@ -25,6 +25,17 @@ Ext.define('grapheye.view.resultsbrowser.Resultsbrowser', {
 	    ]
 	},
 	{
+	    xtype: 'button',
+	    handler: 'onCompare'
+	},
+	{
+	    xtype: 'container',
+	    width: '100%',
+	    reference: 'linePanel',
+	    items:[
+	    ]
+	},
+	{
 	    xtype: 'container',
 	    width: 1000,
 	    height: 500,
