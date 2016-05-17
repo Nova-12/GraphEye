@@ -28,6 +28,8 @@ Ext.define('grapheye.view.resultsbrowser.ResultsbrowserController', {
     },
 
     onRefresh: function() {
+	var resultlist = this.view.up('container').lookupReference('rbresultlist');
+	resultlist.getStore().load();
     },
 
     prepareChart: function(resultItem) {

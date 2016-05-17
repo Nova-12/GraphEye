@@ -60,6 +60,14 @@ Ext.define('grapheye.view.resultsbrowser.ResultList', {
 */
     tools: [
 	{
+	    type: 'refresh',
+	    handler: 'onRefresh'
+	},
+    	{
+	    xtype: 'panel',
+	    width: 10
+	},
+	{
 	    xtype: 'button',
 	    text: 'Chart',
 	    handler: 'showChart'
