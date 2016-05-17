@@ -4,8 +4,7 @@ Ext.define('grapheye.view.resultsbrowser.ResultList', {
     reference: 'rbresultlist',
     requires: [
         'grapheye.view.resultsbrowser.ResultsbrowserController',
-	'Ext.form.*',
-	'grapheye.store.ResultStore'
+	'Ext.form.*'
     ],
     controller: 'resultsbrowser',
     cls: 'resultsbrowser-resultlist shadow',
