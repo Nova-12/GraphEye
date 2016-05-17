@@ -62,7 +62,7 @@ Ext.define('tempapp.view.main.D3HorizontalBarChart', {
     drawChart: function(me, width, height){
 
         if(me.resultData){
-            if(me.localData == ''){
+            if(me.localData === ''){
                 /*
                  Done to ensure that the standard JSON that
                  is used with extjs does not trip up teh json decode that

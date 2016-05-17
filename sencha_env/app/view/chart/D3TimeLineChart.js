@@ -64,7 +64,7 @@ Ext.define('grapheye.view.chart.D3TimeLineChart', {
     drawChart: function(me, width, height){
 
         if(me.dataSet.length > 0){
-            if(me.localData == ''){
+            if(me.localData === ''){
                 /*
                  Done to ensure that the standard JSON that
                  is used with extjs does not trip up teh json decode that
