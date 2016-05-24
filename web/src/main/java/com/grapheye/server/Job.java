@@ -66,7 +66,6 @@ public class Job
         throws ParseException, JsonTypeException, IOException
     {
         parseRequest(jsonString);
-        date = iso8601now();
 
         jobid = DBClient.getNextJobId();
         collectionName = String.format("result_%d", jobid);
@@ -105,6 +104,9 @@ public class Job
 
         this.title = json.getStringOrNull("title");
         this.group = json.getStringOrNull("group");
+        this.date = json.getStringOrNull("date");
+        if (this.date == null || this.date.trim().length() == 0)
+            this.date = iso8601now();
     }
 
     private void startCore() throws IOException

@@ -40,16 +40,20 @@ Request format
 
 ```js
 {
+  "algorithm": "pagerank",
   "input": {
     "type": "text",
     "edge": "/path/to/edgelist/file.txt",
     "node": "/path/to/nodelist/file.txt"
   },
-  "algorithm": "pagerank",
+  "title": "mytitle",
+  "group": "mygroup",
   "params": null,
-  "output": "pagerank_20160406"
+  "date": null,
 }
 ```
+
+`title`, `group`, `date`, `params` can be null.
 
 Response format
 
@@ -93,7 +97,40 @@ Response format (pagerank)
     {"node": "a", "rank": 0.23},
     {"node": "c", "rank": 0.11},
         ...
+  ],
+  "date": "2016-05-17T12:27+0000",
+  "title": "mytitle",
+  "mygroup": "mygroup"
+}
+```
+
+### Result list query
+
+URL: `GET /grapheye/api/list`
+
+Response format
+
+```js
+{
+  "error": null,
+  "jobs": [
+    {
+      "jobid": 1,
+      "date":"2016-05-17T12:27+0000",
+      "title":"aaaa",
+      "algorithm":"pagerank",
+      "group":"gggg"
+    },
+    {
+      "jobid": 2,
+      "date":"2016-05-17T12:31+0000",
+      "title":"aaaa",
+      "algorithm":"pagerank",
+      "group":"gggg"
+    },
+        ...
   ]
 }
 ```
+
 
