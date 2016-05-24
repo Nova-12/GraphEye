@@ -7,12 +7,16 @@ import org.apache.spark.graphx.VertexRDD;
 import org.apache.spark.rdd.RDD
 import org.bson.Document;
 
-class Exporter(mongoAddress: String, dbName: String, collectionName: String,
-                  valueName: String) {
+class Exporter(mongoAddress: String, dbName: String, collectionName: String) {
 
   val client = new MongoClient(mongoAddress)
   val db = client.getDatabase(dbName)
   val collection = db.getCollection(collectionName)
+  var valueName: String = "value";
+
+  def setValueName(name: String) {
+    valueName = name;
+  }
 
   def insertDoubleEntry(node: String, value: Double) {
     var document = new Document()
