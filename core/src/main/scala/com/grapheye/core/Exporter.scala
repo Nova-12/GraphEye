@@ -2,6 +2,9 @@ package com.grapheye.core
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
+import org.apache.spark.graphx.Edge;
+import org.apache.spark.graphx.EdgeRDD;
+import org.apache.spark.graphx.Graph;
 import org.apache.spark.graphx.VertexId
 import org.apache.spark.graphx.VertexRDD;
 import org.apache.spark.rdd.RDD
@@ -12,6 +15,8 @@ class Exporter(mongoAddress: String, dbName: String, collectionName: String) {
   val client = new MongoClient(mongoAddress)
   val db = client.getDatabase(dbName)
   val collection = db.getCollection(collectionName)
+  val edgeCollection = db.getCollection(collectionName + "_edge")
+  val nodeCollection = db.getCollection(collectionName + "_node")
   var valueName: String = "value";
 
   def setValueName(name: String) {
@@ -99,6 +104,32 @@ class Exporter(mongoAddress: String, dbName: String, collectionName: String) {
 
     dataWithNodeNames.sortBy(_._2, ascending=false).collect().foreach(
       (v: (String, VertexId)) => insertVertexIdEntry(v._1, v._2)
+    )
+  }
+
+  def insertEdgeEntry(from: Int, to: Int) {
+    var document = new Document()
+    document.append("from", from)
+    document.append("to", to)
+    edgeCollection.insertOne(document)
+  }
+
+  def insertNodeEntry(id: VertexId, name: String) {
+    var document = new Document()
+    document.append("id", id.toInt)
+    document.append("name", name)
+    nodeCollection.insertOne(document)
+  }
+
+  def exportEdges(graph: Graph[Int, Int]) {
+    graph.edges.collect().foreach(
+      (e: Edge[Int]) => insertEdgeEntry(e.srcId.toInt, e.dstId.toInt)
+    )
+  }
+
+  def exportNodes(nodes: RDD[(VertexId, String)]) {
+    nodes.collect().foreach(
+      (n: (VertexId, String)) => insertNodeEntry(n._1, n._2)
     )
   }
 }

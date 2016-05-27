@@ -62,9 +62,12 @@ object App {
     }
 
     /* Save graph itself */
+    exporter = new Exporter("localhost:27017", "test", conf.output());
+    exporter.exportEdges(graph)
+    if (nodeVertices != null)
+      exporter.exportNodes(nodeVertices)
 
     /* Compute and export */
-    exporter = new Exporter("localhost:27017", "test", conf.output());
     conf.algorithm() match {
       case "pagerank" => compute_pagerank()
       case "trianglecount" => compute_trianglecount()
