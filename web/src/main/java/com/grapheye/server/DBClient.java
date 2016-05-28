@@ -65,6 +65,36 @@ class JobBlock implements Block<Document>
     }
 }
 
+class EdgeBlock implements Block<Document>
+{
+    private JSONArray resultArray;
+    public EdgeBlock(JSONArray array) {
+        this.resultArray = array;
+    }
+    @Override
+    public void apply(final Document doc) {
+        JSONObject item = new JSONObject();
+        item.put("from", doc.getInteger("from"));
+        item.put("to", doc.getInteger("to"));
+        resultArray.add(item);
+    }
+}
+
+class NodeBlock implements Block<Document>
+{
+    private JSONArray resultArray;
+    public NodeBlock(JSONArray array) {
+        this.resultArray = array;
+    }
+    @Override
+    public void apply(final Document doc) {
+        JSONObject item = new JSONObject();
+        item.put("id", doc.getInteger("id"));
+        item.put("title", doc.getString("name"));
+        resultArray.add(item);
+    }
+}
+
 public class DBClient
 {
     private static String dbName = "test";
@@ -128,6 +158,7 @@ public class DBClient
                           jobEntry.getString("date"));
         return job;
     }
+
     public static JSONObject getResult(String algorithm, String table)
     {
         maybeInit();
@@ -138,7 +169,6 @@ public class DBClient
 
         FindIterable<Document> it = db.getCollection(table).find();
         JSONArray data = new JSONArray();
-
         if (algorithm.equals("pagerank"))
             it.forEach(new DoubleValueBlock(data, "rank"));
         else if (algorithm.equals("trianglecount"))
@@ -147,8 +177,17 @@ public class DBClient
             it.forEach(new IntValueBlock(data, "labelId"));
         else if (algorithm.equals("connectedcomponents"))
             it.forEach(new IntValueBlock(data, "connected"));
-
         obj.put("data", data);
+
+        FindIterable<Document> edge_it = db.getCollection(table + "_edge").find();
+        JSONArray edge = new JSONArray();
+        edge_it.forEach(new EdgeBlock(edge));
+        obj.put("edge", edge);
+
+        FindIterable<Document> node_it = db.getCollection(table + "_node").find();
+        JSONArray node = new JSONArray();
+        node_it.forEach(new NodeBlock(node));
+        obj.put("node", node);
 
         return obj;
     }

@@ -51,6 +51,7 @@ public class CoreProcess
     {
         int exitValue;
         try {
+            flushStdio();
             exitValue = process.exitValue();
         }
         catch (IllegalThreadStateException e) {

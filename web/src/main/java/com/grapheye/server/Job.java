@@ -68,7 +68,7 @@ public class Job
         parseRequest(jsonString);
 
         jobid = DBClient.getNextJobId();
-        collectionName = String.format("result_%d", jobid);
+        collectionName = String.format("res%02d", jobid);
 
         startCore();
 
