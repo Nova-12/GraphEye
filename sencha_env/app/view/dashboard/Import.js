@@ -8,7 +8,7 @@ Ext.define('grapheye.view.dashboard.Import', {
     ],
     controller: 'dashboard',
     cls: 'dashboard-import shadow',
-    height: 170,
+    height: 210,
     width: 484,
     bodyPadding: 15,
     title: 'Import',
@@ -38,6 +38,12 @@ Ext.define('grapheye.view.dashboard.Import', {
 	    xtype: 'textfield',
 	    id: 'nodefilepath',
 	    fieldLabel: 'Nodefile Path',
+	    allowBlank: true
+	},
+	{	
+	    xtype: 'textfield',
+	    id: 'collectiondate',
+	    fieldLabel: 'Date',
 	    allowBlank: true
 	}
     ]

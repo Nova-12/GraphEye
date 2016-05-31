@@ -24,6 +24,7 @@ Ext.define('tempapp.view.main.D3HorizontalBarChart', {
     showSeriesLegend: false,
     seriesTitle     : '',
     valueFormat     : 'float',                    // takes int, currency, float (two decimal places)
+    nodeNum	    : 0,
     barColor        : '#4f99b4',
 
     resultData	    : '',
@@ -71,9 +72,15 @@ Ext.define('tempapp.view.main.D3HorizontalBarChart', {
 		console.log("result Data = ");
 		console.log(me.resultData);
 		var singleKeyFormat = [{"key":me.seriesTitle, "color": me.barColor, "values":[]}];
-		Ext.Array.each(me.resultData.data, function(item){
-		    singleKeyFormat[0].values.push(item);
-		});
+		console.log("here, node number = ");
+		console.log(me.nodeNum);
+		for (i = 0; i<me.nodeNum; i++)
+		{
+		    singleKeyFormat[0].values.push(me.resultData.data[i]);
+		}
+		//Ext.Array.each(me.resultData.data, function(item){
+		//    singleKeyFormat[0].values.push(item);
+		//});
 		singleKeyFormat[0].values.sort(function(a,b) { return b.rank - a.rank});
 		me.localData = singleKeyFormat;
 		setupChart(me.localData);

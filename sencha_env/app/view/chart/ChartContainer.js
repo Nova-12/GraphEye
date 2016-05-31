@@ -34,7 +34,7 @@ Ext.define('grapheye.view.chart.ChartContainer', {
 	}
     ],
 
-    initialize: 'onInit',
+    initiComponent: 'onInit',
 
     items: [
         {

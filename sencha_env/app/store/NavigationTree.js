@@ -1,3 +1,7 @@
+/*
+ * Navigation Tree store class that stores multiple viewports.
+ */
+
 Ext.define('grapheye.store.NavigationTree', {
     extend: 'Ext.data.TreeStore',
 

@@ -7,7 +7,7 @@ Ext.define('grapheye.view.dashboard.Export', {
     ],
 
     cls: 'dashboard-export shadow',
-    height: 170,
+    height: 210,
     width: 484,
     bodyPadding: 15,
     title: 'Export',

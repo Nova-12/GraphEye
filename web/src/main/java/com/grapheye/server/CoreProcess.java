@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+
+/*
+ * Spark module process handler to obtain status.
+ */
 public class CoreProcess
 {
     private static String grapheyeCorePath;
@@ -54,8 +58,10 @@ public class CoreProcess
             exitValue = process.exitValue();
         }
         catch (IllegalThreadStateException e) {
+flushStdio();
             return "running";
         }
+flushStdio();
         if (exitValue == 0)
             return "success";
         else

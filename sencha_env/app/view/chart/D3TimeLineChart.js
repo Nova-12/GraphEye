@@ -87,6 +87,7 @@ Ext.define('grapheye.view.chart.D3TimeLineChart', {
         function formatData(rawData, nodeNum){
 	    var i;
 	    var j;
+	    var k;
 	    var formattedData = [];
 	    console.log("formatting data");
 	    for (i = 0; i<nodeNum; i++)
@@ -100,7 +101,12 @@ Ext.define('grapheye.view.chart.D3TimeLineChart', {
 			        );
 	        for (j = 0; j<rawData.length; j++)
 	        {
-		    formattedData[i].values.push({'x': rawData[j].date, 'y': rawData[j].data[i].rank});
+		    for (k = 0; k<rawData[j].data.length; k++){
+			if (rawData[j].data[k].node == rawData[0].data[i].node){
+		    	    formattedData[i].values.push({'x': rawData[j].date, 'y': rawData[j].data[k].rank});
+			    break;
+			}
+		    }
 	        }
 	    }
 	    return formattedData;

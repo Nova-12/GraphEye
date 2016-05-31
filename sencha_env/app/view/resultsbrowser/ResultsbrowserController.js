@@ -80,6 +80,12 @@ Ext.define('grapheye.view.resultsbrowser.ResultsbrowserController', {
 	this.view.up('container').lookupReference('rbCharts').removeAll();
 	this.view.up('container').lookupReference('rbCharts').add(
 	    Ext.create({
+		xtype: 'chartcontainer',
+		reference: 'horbarchart',
+		resultData: resultData,
+		chartType: 'horbar'
+	    })
+	    /*Ext.create({
 		xtype: 'D3HorizontalBarChart',
 	    	title: title,
 		width: '100%',
@@ -88,7 +94,8 @@ Ext.define('grapheye.view.resultsbrowser.ResultsbrowserController', {
 		dataUrl: 'resources/testdata/donutdata.json',
 		chartTitle: '',
 		showTotal: true
-	    }));
+	    })*/
+	    );
     },
 
     createLineChart: function(dataSet) {
@@ -96,6 +103,7 @@ Ext.define('grapheye.view.resultsbrowser.ResultsbrowserController', {
 	this.view.up('container').lookupReference('linePanel').add(
 	    Ext.create({
 		xtype: 'chartcontainer',
+		reference: 'linechart',
 		resultData: dataSet,
 		chartType: 'line'
 	    }));

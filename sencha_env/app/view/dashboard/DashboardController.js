@@ -21,10 +21,12 @@ Ext.define('grapheye.view.dashboard.DashboardController', {
 	var me = this;
 	var edgefilepath = Ext.getCmp('edgefilepath').getValue();
 	var nodefilepath = Ext.getCmp('nodefilepath').getValue();
+	var date = Ext.getCmp('collectiondate').getValue();
 	//edgefilepath = edgefilepath.replace('C:\\fakepath\\', '/Users/sypark0614/Desktop/'); //hard-coded
 	//nodefilepath = nodefilepath.replace('C:\\fakepath\\', '/Users/sypark0614/Desktop/'); //hard-coded
 	grapheye.store.Request.importEdgeFile = edgefilepath;
 	grapheye.store.Request.importNodeFile = nodefilepath;
+	grapheye.store.Request.date = date;
 	console.log(grapheye.store.Request);
     },
 
@@ -50,7 +52,8 @@ Ext.define('grapheye.view.dashboard.DashboardController', {
                 "algorithm": grapheye.store.Request.algorithmName,
                 "params": null,
                 "title": grapheye.store.Request.title,
-		"group": grapheye.store.Request.group
+		"group": grapheye.store.Request.group,
+		"date": grapheye.store.Request.date
         };
         Ext.Ajax.request({
             url:"api/launch",
@@ -122,14 +125,10 @@ Ext.define('grapheye.view.dashboard.DashboardController', {
 	    {
     	        me.lookupReference('visualPanel').add(
                	    Ext.create({
-        	        xtype: 'D3HorizontalBarChart',
-        	        title: grapheye.store.Request.title,
-        	        width: '100%',
-        	        height: 400,
+        	        xtype: 'chartcontainer',
+        	        reference: 'horbarchart',
 		        resultData: jsonResult,
-        	        dataUrl: 'resources/testdata/donutdata.json',
-        	        chartTitle: grapheye.store.Request.title,
-        	        showTotal: true
+        	        chartType: 'horbar'
         	    }));
 	    }
     }
