@@ -36,19 +36,24 @@ class Conf(args: Seq[String]) extends ScallopConf(args) {
 }
 
 object App {
+
+  var exporter: Exporter = null
+  var conf: Conf = null
+  var graph: Graph[Int, Int] = null
+  var nodeVertices: RDD[(VertexId, String)] = null
+
   def main(args: Array[String]) {
 
     /* Load and parse configurations. */
-    val conf = new Conf(args)
+    conf = new Conf(args)
 
     val sconf = new SparkConf();
     val sc = new SparkContext(sconf)
 
     /* Import */
     System.out.println("Importing..")
-    val graph = GraphLoader.edgeListFile(sc, conf.edgeFile())
+    graph = GraphLoader.edgeListFile(sc, conf.edgeFile())
 
-    var nodeVertices: RDD[(VertexId, String)] = null;
     if (!conf.nodeFile.isEmpty) {
       val nodeList = sc.textFile(conf.nodeFile())
       nodeVertices = nodeList.map(
@@ -56,46 +61,56 @@ object App {
       )
     }
 
+    /* Save graph itself */
+    exporter = new Exporter("localhost:27017", "test", conf.output());
+    exporter.exportEdges(graph)
+    if (nodeVertices != null)
+      exporter.exportNodes(nodeVertices)
+
     /* Compute and export */
     conf.algorithm() match {
-      case "pagerank" => compute_pagerank(graph, nodeVertices, conf)
-      case "trianglecount" => compute_trianglecount(graph, nodeVertices, conf)
-      case "labelpropagation" => compute_labelpropagation(graph, nodeVertices, conf)
-      case "connectedcomponents" =>compute_connectedcomponents(graph, nodeVertices, conf)
+      case "pagerank" => compute_pagerank()
+      case "trianglecount" => compute_trianglecount()
+      case "labelpropagation" => compute_labelpropagation()
+      case "connectedcomponents" =>compute_connectedcomponents()
     }
 
     System.out.println("Done!")
   }
-  def compute_pagerank(graph: Graph[Int, Int], nodeVertices: RDD[(VertexId, String)], conf: Conf) {
+
+  def compute_pagerank() {
     System.out.println("Computing..")
     val ranks = graph.pageRank(0.0001)
 
     System.out.println("Exporting..")
-    val exporter = new Exporter("localhost:27017", "test", conf.output(), "rank")
+    exporter.setValueName("rank")
     exporter.exportDouble(ranks.vertices, nodeVertices)
   }
-  def compute_trianglecount(graph: Graph[Int, Int], nodeVertices: RDD[(VertexId, String)], conf: Conf) {
+
+  def compute_trianglecount() {
     System.out.println("Computing..")
     val numberOfTriangles = graph.triangleCount()
 
     System.out.println("Exporting..")
-    val exporter = new Exporter("localhost:27017", "test", conf.output(), "trianglecount")
+    exporter.setValueName("trianglecount")
     exporter.exportInt(numberOfTriangles.vertices, nodeVertices)
   }
-    def compute_labelpropagation(graph: Graph[Int, Int], nodeVertices: RDD[(VertexId, String)], conf: Conf) {
+
+  def compute_labelpropagation() {
     System.out.println("Computing..")
     val labelId = LabelPropagation.run(graph, 10)
 
     System.out.println("Exporting..")
-    val exporter = new Exporter("localhost:27017", "test", conf.output(), "labelId")
+    exporter.setValueName("labelId")
     exporter.exportVertexId(labelId.vertices, nodeVertices)
   }
-  def compute_connectedcomponents(graph: Graph[Int, Int], nodeVertices: RDD[(VertexId, String)], conf: Conf) {
+
+  def compute_connectedcomponents() {
     System.out.println("Computing..")
     val connectedNodes = graph.connectedComponents()
 
     System.out.println("Exporting..")
-    val exporter = new Exporter("localhost:27017", "test", conf.output(), "connected")
+    exporter.setValueName("connected")
     exporter.exportVertexId(connectedNodes.vertices, nodeVertices)
   }
 }
