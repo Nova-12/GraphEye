@@ -10,6 +10,7 @@ import org.apache.spark.graphx.VertexRDD;
 import org.apache.spark.rdd.RDD
 import org.bson.Document;
 
+/* The purpose of Exporter class is to export computed graph result to MongoDB */
 class Exporter(mongoAddress: String, dbName: String, collectionName: String) {
 
   val client = new MongoClient(mongoAddress)
@@ -23,6 +24,7 @@ class Exporter(mongoAddress: String, dbName: String, collectionName: String) {
     valueName = name;
   }
 
+  /* The following three methods are used for making collection instance */
   def insertDoubleEntry(node: String, value: Double) {
     var document = new Document()
     document.append("node", node)
@@ -44,6 +46,7 @@ class Exporter(mongoAddress: String, dbName: String, collectionName: String) {
     collection.insertOne(document)
   }
 
+  /* The following three methods are used for exporting collection instance to MongoDB collection*/
   def exportDouble(data: VertexRDD[Double], nodeNames: RDD[(VertexId, String)]) {
 
     var dataWithNodeNames: RDD[(String, Double)] = null
@@ -107,6 +110,7 @@ class Exporter(mongoAddress: String, dbName: String, collectionName: String) {
     )
   }
 
+  /* The following four methods are used for saving graph itself */
   def insertEdgeEntry(from: Int, to: Int) {
     var document = new Document()
     document.append("from", from)

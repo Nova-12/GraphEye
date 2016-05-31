@@ -12,6 +12,7 @@ import org.apache.spark.rdd.RDD
 import org.rogach.scallop.ScallopConf
 import org.rogach.scallop.exceptions.RequiredOptionNotFound
 
+/* The purpose of Conf class is to parse the arguments in command line interface */
 class Conf(args: Seq[String]) extends ScallopConf(args) {
 
   val algorithm = trailArg[String]()
@@ -42,6 +43,7 @@ object App {
   var graph: Graph[Int, Int] = null
   var nodeVertices: RDD[(VertexId, String)] = null
 
+  /* The main function of GraphEye core */
   def main(args: Array[String]) {
 
     /* Load and parse configurations. */
@@ -78,6 +80,7 @@ object App {
     System.out.println("Done!")
   }
 
+  /* The following four methods compute graph algorithm and export to MongoDB */
   def compute_pagerank() {
     System.out.println("Computing..")
     val ranks = graph.pageRank(0.0001)
