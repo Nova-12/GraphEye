@@ -38,10 +38,32 @@ class Conf(args: Seq[String]) extends ScallopConf(args) {
 
 object App {
 
+  var sc: SparkContext = null
   var exporter: Exporter = null
   var conf: Conf = null
-  var graph: Graph[Int, Int] = null
-  var nodeVertices: RDD[(VertexId, String)] = null
+  var graph: Graph[String, Int] = null
+
+  def load_from_textfile(): Graph[String, Int] = {
+    val edgeList = GraphLoader.edgeListFile(sc, conf.edgeFile())
+    var result: Graph[String, Int] = null
+
+    if (conf.nodeFile.isEmpty) {
+      result = edgeList.mapVertices[String](
+        (vid: VertexId, number: Int) => vid.toString
+      )
+    }
+    else {
+      val nodeList = sc.textFile(conf.nodeFile())
+      val nodeV = nodeList.map(
+        line => (line.split(" ")(0).toLong, line.split(" ")(1))
+      )
+      result = edgeList.outerJoinVertices[String, String](nodeV)(
+        (vid: VertexId, number: Int, name: Option[String])
+        => (name.getOrElse("nonamed"))
+      )
+    }
+    return result
+  }
 
   /* The main function of GraphEye core */
   def main(args: Array[String]) {
@@ -50,24 +72,15 @@ object App {
     conf = new Conf(args)
 
     val sconf = new SparkConf();
-    val sc = new SparkContext(sconf)
+    sc = new SparkContext(sconf)
 
     /* Import */
     System.out.println("Importing..")
-    graph = GraphLoader.edgeListFile(sc, conf.edgeFile())
-
-    if (!conf.nodeFile.isEmpty) {
-      val nodeList = sc.textFile(conf.nodeFile())
-      nodeVertices = nodeList.map(
-        v => (v.split(" ")(0).toLong, v.split(" ")(1))
-      )
-    }
+    graph = load_from_textfile()
 
     /* Save graph itself */
     exporter = new Exporter("localhost:27017", "test", conf.output());
-    exporter.exportEdges(graph)
-    if (nodeVertices != null)
-      exporter.exportNodes(nodeVertices)
+    exporter.exportGraph(graph)
 
     /* Compute and export */
     conf.algorithm() match {
@@ -87,7 +100,7 @@ object App {
 
     System.out.println("Exporting..")
     exporter.setValueName("rank")
-    exporter.exportDouble(ranks.vertices, nodeVertices)
+    exporter.exportDouble(graph, ranks.vertices)
   }
 
   def compute_trianglecount() {
@@ -96,7 +109,7 @@ object App {
 
     System.out.println("Exporting..")
     exporter.setValueName("trianglecount")
-    exporter.exportInt(numberOfTriangles.vertices, nodeVertices)
+    exporter.exportInt(graph, numberOfTriangles.vertices)
   }
 
   def compute_labelpropagation() {
@@ -105,7 +118,7 @@ object App {
 
     System.out.println("Exporting..")
     exporter.setValueName("labelId")
-    exporter.exportVertexId(labelId.vertices, nodeVertices)
+    exporter.exportVertexId(graph, labelId.vertices)
   }
 
   def compute_connectedcomponents() {
@@ -114,6 +127,6 @@ object App {
 
     System.out.println("Exporting..")
     exporter.setValueName("connected")
-    exporter.exportVertexId(connectedNodes.vertices, nodeVertices)
+    exporter.exportVertexId(graph, connectedNodes.vertices)
   }
 }

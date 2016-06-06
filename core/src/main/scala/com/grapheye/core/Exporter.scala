@@ -47,70 +47,34 @@ class Exporter(mongoAddress: String, dbName: String, collectionName: String) {
   }
 
   /* The following three methods are used for exporting collection instance to MongoDB collection*/
-  def exportDouble(data: VertexRDD[Double], nodeNames: RDD[(VertexId, String)]) {
-
-    var dataWithNodeNames: RDD[(String, Double)] = null
-    if (nodeNames != null) {
-      dataWithNodeNames = data.leftJoin(nodeNames) {
-        (vid: VertexId, value: Double, name: Option[String]) => (name.getOrElse(""), value)
-      }.map(
-        (v: (VertexId, (String, Double))) => (v._2._1, v._2._2)
-      )
-    }
-    else {
-      dataWithNodeNames = data.map(
-        (v: (VertexId, Double)) => (v._1.toString, v._2)
-      )
-    }
-
-    dataWithNodeNames.sortBy(_._2, ascending=false).collect().foreach(
-      (v: (String, Double)) => insertDoubleEntry(v._1, v._2)
+  def exportDouble(graph: Graph[String,Int], data: VertexRDD[Double]) {
+    val dataWithNames = data.leftZipJoin[String, (String,Double)](graph.vertices)(
+      (vid: VertexId, value: Double, name: Option[String]) => (name.getOrElse(""), value)
+    )
+    dataWithNames.sortBy(_._2, ascending=false).collect().foreach(
+      (v: (VertexId, (String, Double))) => insertDoubleEntry(v._2._1, v._2._2)
     )
   }
 
-  def exportInt(data: VertexRDD[Int], nodeNames: RDD[(VertexId, String)]) {
-
-    var dataWithNodeNames: RDD[(String, Int)] = null
-    if (nodeNames != null) {
-      dataWithNodeNames = data.leftJoin(nodeNames) {
-        (vid: VertexId, value: Int, name: Option[String]) => (name.getOrElse(""), value)
-      }.map(
-        (v: (VertexId, (String, Int))) => (v._2._1, v._2._2)
-      )
-    }
-    else {
-      dataWithNodeNames = data.map(
-        (v: (VertexId, Int)) => (v._1.toString, v._2)
-      )
-    }
-
-    dataWithNodeNames.sortBy(_._2, ascending=false).collect().foreach(
-      (v: (String, Int)) => insertIntEntry(v._1, v._2)
+  def exportInt(graph: Graph[String,Int], data: VertexRDD[Int]) {
+    val dataWithNames = data.leftZipJoin[String, (String,Int)](graph.vertices)(
+      (vid: VertexId, value: Int, name: Option[String]) => (name.getOrElse(""), value)
+    )
+    dataWithNames.sortBy(_._2, ascending=false).collect().foreach(
+      (v: (VertexId, (String, Int))) => insertIntEntry(v._2._1, v._2._2)
     )
   }
 
-  def exportVertexId(data: VertexRDD[VertexId], nodeNames: RDD[(VertexId, String)]) {
-
-    var dataWithNodeNames: RDD[(String, VertexId)] = null
-    if (nodeNames != null) {
-      dataWithNodeNames = data.leftJoin(nodeNames) {
-        (vid: VertexId, value: VertexId, name: Option[String]) => (name.getOrElse(""), value)
-      }.map(
-        (v: (VertexId, (String, VertexId))) => (v._2._1, v._2._2)
-      )
-    }
-    else {
-      dataWithNodeNames = data.map(
-        (v: (VertexId, VertexId)) => (v._1.toString, v._2)
-      )
-    }
-
-    dataWithNodeNames.sortBy(_._2, ascending=false).collect().foreach(
-      (v: (String, VertexId)) => insertVertexIdEntry(v._1, v._2)
+  def exportVertexId(graph: Graph[String,Int], data: VertexRDD[VertexId]) {
+    val dataWithNames = data.leftZipJoin[String, (String,VertexId)](graph.vertices)(
+      (vid: VertexId, value: VertexId, name: Option[String]) => (name.getOrElse(""), value)
+    )
+    dataWithNames.sortBy(_._2, ascending=false).collect().foreach(
+      (v: (VertexId, (String, VertexId))) => insertVertexIdEntry(v._2._1, v._2._2)
     )
   }
 
-  /* The following four methods are used for saving graph itself */
+  /* The following three methods are used for saving graph itself */
   def insertEdgeEntry(from: Int, to: Int) {
     var document = new Document()
     document.append("from", from)
@@ -125,15 +89,12 @@ class Exporter(mongoAddress: String, dbName: String, collectionName: String) {
     nodeCollection.insertOne(document)
   }
 
-  def exportEdges(graph: Graph[Int, Int]) {
+  def exportGraph(graph: Graph[String, Int]) {
     graph.edges.collect().foreach(
       (e: Edge[Int]) => insertEdgeEntry(e.srcId.toInt, e.dstId.toInt)
     )
-  }
-
-  def exportNodes(nodes: RDD[(VertexId, String)]) {
-    nodes.collect().foreach(
-      (n: (VertexId, String)) => insertNodeEntry(n._1, n._2)
+    graph.vertices.collect().foreach(
+      (v: (VertexId, String)) => insertNodeEntry(v._1, v._2)
     )
   }
 }
