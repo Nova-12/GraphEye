@@ -13,20 +13,27 @@ class Conf(args: Seq[String]) extends ScallopConf(args) {
 
   val algorithm = trailArg[String]()
   val output = trailArg[String]()
-  val edgeFile = trailArg[String]()
-  val nodeFile = trailArg[String](required=false)
+  val inputType = trailArg[String]()
+  val edge = trailArg[String]()
+  val node = trailArg[String](required=false)
 
   validate(algorithm) { a =>
     if (List("pagerank", "trianglecount", "labelpropagation", "connectedcomponents").contains(a)) Right(Unit)
     else Left("unsupported algorithm " + a)
   }
 
+  validate(inputType) { a =>
+    if (List("text", "mongodb").contains(a)) Right(Unit)
+    else Left("unsupported input type " + a)
+  }
+
   override def onError(e: Throwable): Unit = {
     System.err.println(
-      """Usage: ./run.sh algorithm output input
+      """Usage: ./run.sh algorithm output inputType edge [node]
         |  Algorithm: pagerank, trianglecount, labelpropagation, connectedcomponents
         |  Output: mongodb_collection_name
-        |  Input: edge_file_path node_file_path""".stripMargin)
+        |  InputType: text mongodb
+        |  edge, node: file path or table name or collection name""".stripMargin)
     System.exit(1)
   }
   verify()

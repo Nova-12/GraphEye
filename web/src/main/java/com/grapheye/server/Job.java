@@ -114,6 +114,7 @@ public class Job
         ArrayList<String> args = new ArrayList<String>();
         args.add(this.algorithm);
         args.add(this.collectionName);
+        args.add(this.inputType);
         if (this.inputType.equals("text"))
         {
             args.add(this.inputEdgeFile);
