@@ -2,12 +2,8 @@ package com.grapheye.core
 
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkConf
-import org.apache.spark.graphx.GraphLoader
-import org.apache.spark.graphx.VertexId
-import org.apache.spark.graphx.VertexRDD
 import org.apache.spark.graphx.Graph
 import org.apache.spark.graphx.lib.LabelPropagation
-import org.apache.spark.rdd.RDD
 
 import org.rogach.scallop.ScallopConf
 import org.rogach.scallop.exceptions.RequiredOptionNotFound
@@ -43,28 +39,6 @@ object App {
   var conf: Conf = null
   var graph: Graph[String, Int] = null
 
-  def load_from_textfile(): Graph[String, Int] = {
-    val edgeList = GraphLoader.edgeListFile(sc, conf.edgeFile())
-    var result: Graph[String, Int] = null
-
-    if (conf.nodeFile.isEmpty) {
-      result = edgeList.mapVertices[String](
-        (vid: VertexId, number: Int) => vid.toString
-      )
-    }
-    else {
-      val nodeList = sc.textFile(conf.nodeFile())
-      val nodeV = nodeList.map(
-        line => (line.split(" ")(0).toLong, line.split(" ")(1))
-      )
-      result = edgeList.outerJoinVertices[String, String](nodeV)(
-        (vid: VertexId, number: Int, name: Option[String])
-        => (name.getOrElse("nonamed"))
-      )
-    }
-    return result
-  }
-
   /* The main function of GraphEye core */
   def main(args: Array[String]) {
 
@@ -76,7 +50,8 @@ object App {
 
     /* Import */
     System.out.println("Importing..")
-    graph = load_from_textfile()
+    val importer = new Importer(sc, conf)
+    graph = importer.importGraph()
 
     /* Save graph itself */
     exporter = new Exporter("localhost:27017", "test", conf.output());
