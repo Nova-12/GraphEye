@@ -14,8 +14,9 @@ This project is made of two subprojects: `core` and `web`.
 
 ```
 make
-./run.sh algorithm output inputs
-# ./run.sh pagerank pr_test test.edgelist test.nodelist
+./run.sh algorithm output inputType edges nodes
+# ./run.sh pagerank pr_test text test.edgelist test.nodelist
+# ./run.sh pagerank pr_test mongodb "mongodb://localhost:27017/graph.edges" "mongodb://localhost:27017/graph.nodes"
 ```
 
 ### Spark monitor
