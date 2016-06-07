@@ -24,6 +24,7 @@ Ext.define('grapheye.view.dashboard.DashboardController', {
 	var date = Ext.getCmp('collectiondate').getValue();
 	//edgefilepath = edgefilepath.replace('C:\\fakepath\\', '/Users/sypark0614/Desktop/'); //hard-coded
 	//nodefilepath = nodefilepath.replace('C:\\fakepath\\', '/Users/sypark0614/Desktop/'); //hard-coded
+    grapheye.store.Request.importType = Ext.ComponentQuery.query('[name=sourcetype]')[0].getGroupValue();
 	grapheye.store.Request.importEdgeFile = edgefilepath;
 	grapheye.store.Request.importNodeFile = nodefilepath;
 	grapheye.store.Request.date = date;

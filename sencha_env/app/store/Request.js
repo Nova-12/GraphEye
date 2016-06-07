@@ -2,7 +2,7 @@
 
 Ext.define('grapheye.store.Request', {
 	singleton: true,
-	importType: 'text',
+	importType: null,
 	importEdgeFile: null,
 	importNodeFile: null,
 	algorithmName: null,

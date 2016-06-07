@@ -28,23 +28,50 @@ Ext.define('grapheye.view.dashboard.Import', {
     ],
 
     items: [
-	{
+    {
+	    xtype: 'fieldcontainer',
+		id: 'sourcetypefield',
+	    reference: 'sourcetypefield',
+		defaultType: 'radiofield',
+		
+		defaults:{
+		    flex: 2,
+		    width: 200
+		},
+	
+		layout: 'hbox',
+
+		items: [{
+	    boxLabel: 'TextFile',
+	    name: 'sourcetype',
+	    inputValue: 'text',
+	    id: 'textfilesource'
+	    }, {
+	    boxLabel: 'MySQL',
+	    name: 'sourcetype',
+	    inputValue: 'mysql',
+	    id: 'mysqlsource'
+	    }, {
+	    boxLabel: 'MongoDB',
+	    name: 'sourcetype',
+	    inputValue: 'mongodb',
+	    id: 'mongodbsource'
+	    }]
+	},  {
 	    xtype: 'textfield',
 	    id: 'edgefilepath',
 	    fieldLabel: 'Edgefile Path',
 	    allowBlank: false
-	},
-        {
+	},  {
 	    xtype: 'textfield',
 	    id: 'nodefilepath',
 	    fieldLabel: 'Nodefile Path',
-	    allowBlank: true
-	},
-	{	
+	    allowBlank: false
+	},	{	
 	    xtype: 'textfield',
 	    id: 'collectiondate',
 	    fieldLabel: 'Date',
 	    allowBlank: true
 	}
-    ]
+	]
 });
