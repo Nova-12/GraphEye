@@ -48,7 +48,7 @@ Ext.define('tempapp.view.main.D3HorizontalBarChart', {
     },
 
     refreshSize: function(me, width, height){
-        me.drawChart(me, width, height)
+        me.drawChart(me, width, height);
     },
     /*
      Data includes the full JSON record that is passed
@@ -81,7 +81,7 @@ Ext.define('tempapp.view.main.D3HorizontalBarChart', {
 		//Ext.Array.each(me.resultData.data, function(item){
 		//    singleKeyFormat[0].values.push(item);
 		//});
-		singleKeyFormat[0].values.sort(function(a,b) { return b.rank - a.rank});
+		singleKeyFormat[0].values.sort(function(a,b) { return b.rank - a.rank; });
 		me.localData = singleKeyFormat;
 		setupChart(me.localData);
             } else {

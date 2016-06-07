@@ -48,7 +48,7 @@ Ext.define('grapheye.view.chart.D3TimeLineChart', {
     },
 
     refreshSize: function(me, width, height){
-        me.drawChart(me, width, height)
+        me.drawChart(me, width, height);
     },
     /*
      Data includes the full JSON record that is passed
@@ -152,7 +152,7 @@ Ext.define('grapheye.view.chart.D3TimeLineChart', {
 		.showLegend(true)
 		.showYAxis(true)
 		.showXAxis(true)
-                .transitionDuration(350)
+                .transitionDuration(350);
                 //.showControls(me.showControls);        //Allow user to switch between "Grouped" and "Stacked" mode.
 
             //chart.valueFormat(formatString);

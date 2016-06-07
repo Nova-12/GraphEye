@@ -14,7 +14,7 @@ Ext.define('grapheye.view.chart.ChartController', {
 */
     onRefresh: function() {
 	console.log("Refresh called");
-	me = this
+	me = this;
 	var chartType = this.view.chartType;
 	var resultData = this.view.resultData;
 	var nodeNum = Number(Ext.getCmp('nodeNum').getValue());

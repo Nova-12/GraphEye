@@ -70,7 +70,7 @@ Ext.define('grapheye.view.resultsbrowser.ResultsbrowserController', {
 	    method:"GET",
 	    success: function(result, request){
 		resultData = Ext.JSON.decode(result.responseText);
-		data.push(resultData)
+		data.push(resultData);
 		if (data.length < results.length){
 		    me.prepareLineChart(results, data);
 		}
