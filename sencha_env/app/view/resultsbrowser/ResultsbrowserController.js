@@ -26,6 +26,14 @@ Ext.define('grapheye.view.resultsbrowser.ResultsbrowserController', {
 	    this.prepareLineChart(results, []);
 	}
     },
+    showTopology: function() {
+	var results = [];
+	var resultlist = this.view.up('container').lookupReference('rbresultlist');
+	if (resultlist.getSelectionModel().hasSelection()) {
+	    var row = resultlist.getSelectionModel().getSelection()[0];
+        this.prepareTopologyChart(row.data);
+	}
+    },
 
     onRefresh: function() {
 	var resultlist = this.view.up('container').lookupReference('rbresultlist');
@@ -33,6 +41,7 @@ Ext.define('grapheye.view.resultsbrowser.ResultsbrowserController', {
     },
 
     prepareChart: function(resultItem) {
+        console.log("prepare chart");
 	var me = this;
 	var jobID = resultItem.jobid;
 	var urlString = "api/result/" + jobID;
@@ -75,6 +84,25 @@ Ext.define('grapheye.view.resultsbrowser.ResultsbrowserController', {
 	});
     },
 
+    prepareTopologyChart: function(resultItem) {
+	var me = this;
+	var jobID = resultItem.jobid;
+	var urlString = "api/result/" + jobID;
+	var resultData;
+	Ext.Ajax.request({
+	    url:urlString,
+	    method:"GET",
+	    success: function(result, request){
+		resultData = Ext.JSON.decode(result.responseText);
+		me.createTopologyChart(resultData);
+		//grapheye.store.Results.results.push(jsonResult); Caching purpose
+	    },
+	    failure: function(result, request){
+		Ext.Msg.alert("Result Fetch Failed");
+	    }
+	});
+    },
+
     createChart: function(resultData) {
 	var title = resultData.title;
 	this.view.up('container').lookupReference('rbCharts').removeAll();
@@ -106,6 +134,17 @@ Ext.define('grapheye.view.resultsbrowser.ResultsbrowserController', {
 		reference: 'linechart',
 		resultData: dataSet,
 		chartType: 'line'
+	    }));
+    },
+
+    createTopologyChart: function(dataSet) {
+	this.view.up('container').lookupReference('topologyPanel').removeAll();
+	this.view.up('container').lookupReference('topologyPanel').add(
+	    Ext.create({
+		xtype: 'chartcontainer',
+		reference: 'horbarchart',
+		resultData: dataSet,
+		chartType: 'horbar'
 	    }));
     }
 

@@ -26,6 +26,9 @@ Ext.define('grapheye.view.chart.ChartController', {
 		break;
 	    case 'horbar':
 		me.createHorbarChart(resultData, nodeNum);
+        break;
+        case 'topology':
+        me.createTopologyChart(resultData, nodeNum);
 		break;
 	}
     },
@@ -61,5 +64,20 @@ Ext.define('grapheye.view.chart.ChartController', {
 		showTotal: true,
 		nodeNum: nodeNum
 	    }));
+    },
+    // input: JSON
+    createTopologyChart: function(resultData) {
+        var ctitle = resultData.title;
+        console.log("before remove");
+        this.lookupReference('chartbox').removeAll();
+        console.log("after remove");
+        this.lookupReference('chartbox').add(
+            Ext.create({
+                xtype: 'VisTopologyChart',
+                title: ctitle,
+                width: '100%',
+                height: 400,
+                resultData: resultData
+        }));
     }
 });
