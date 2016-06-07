@@ -9,4 +9,4 @@ Ext.define('grapheye.store.Request', {
 	title: null,
 	group: null,
 	date: null
-})
+});

@@ -29,7 +29,7 @@ Ext.define('tempapp.view.main.VisTopologyChart', {
     },
 
     refreshSize: function(me, width, height){
-        me.drawChart(me, width, height)
+        me.drawChart(me, width, height);
     },
 
     drawChart: function(me, width, height){

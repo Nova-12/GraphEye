@@ -88,7 +88,7 @@ Ext.define('grapheye.view.dashboard.DashboardController', {
 		if (me.jobStatus == "running" || me.jobStatus === null)
 		{
 		    console.log("Waiting for results...");
-		    window.setTimeout(function(){me.onJobFinish()}, 1000);
+		    window.setTimeout(function(){ me.onJobFinish(); }, 1000);
 		}
 		else
 		{
@@ -121,7 +121,7 @@ Ext.define('grapheye.view.dashboard.DashboardController', {
 
     getChart: function(jsonResult) {
 	    var me = this;
-	    console.log(jsonResult)
+	    console.log(jsonResult);
 	    if (jsonResult.error === null)
 	    {
     	        me.lookupReference('visualPanel').add(
