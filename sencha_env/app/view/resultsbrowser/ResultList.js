@@ -76,7 +76,12 @@ Ext.define('grapheye.view.resultsbrowser.ResultList', {
 	    xtype: 'button',
 	    text: 'Compare',
 	    handler: 'compareResults'
-	}
+	},
+    {
+        xtype: 'button',
+        text: 'Topology',
+        handler: 'showTopology'
+    }
     ]
 /*
     initialize: 'onInit',

@@ -13,30 +13,15 @@ Ext.define('grapheye.view.resultsbrowser.Resultsbrowser', {
     layout: 'responsivecolumn',
 
     items: [
-	{
-	    xtype: 'rbresultlist',
-	    reference: 'rbresultlist',
-	    title: 'Result List'
-	},
-	{
-	    region: 'center',
-	    xtype: 'panel',
-	    reference: 'rbCharts',
-	    items:[
-	    ]
-	},
-	{
-	    xtype: 'container',
-	    width: '100%',
-	    reference: 'linePanel',
-	    items:[
-	    ]
-	},
-	{
-	    xtype: 'container',
-	    width: 1000,
-	    height: 500,
-	    userCls: 'big-60 small-100'
-	}
+    { xtype: 'rbresultlist', reference: 'rbresultlist', title: 'Result List' },
+    { xtype: 'panel', region: 'center', reference: 'rbCharts', items:[] },
+    { xtype: 'container', width: '100%', reference: 'linePanel', items:[] },
+    { xtype: 'panel', region: 'center', reference: 'topologyPanel', items: [] },
+    {
+        xtype: 'container',
+        width: 1000,
+        height: 500,
+        userCls: 'big-60 small-100'
+    }
     ]
 });

@@ -231,7 +231,8 @@
 	{
 	    "path": "resources/js/nv.d3.min.js",
 	    "bundle": false
-	}
+	},
+    { "path": "resources/js/vis.min.js", "bundle": false }
     ],
 
     
@@ -277,7 +278,8 @@
 	{
 	    "path": "resources/css/nv.d3.css",
 	    "bootstrap": false
-	}
+	},
+    { "path": "resources/css/vis.min.css", "bootstrap": "false" }
     ],
 
     /**
